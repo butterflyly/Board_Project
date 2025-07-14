@@ -1,0 +1,37 @@
+<html layout:decorate="~{layouts/layout}">
+<main layout:fragment="content" class="container my-3">
+    <input type="hidden" th:value="${sender_nickname}" name="sender_nickname" id="sender_nickname">
+    <form th:action="@{/message/send}" th:object="${messageForm}"
+          method="post">
+        <div th:replace="~{form_errors :: formErrorsFragment}"></div>
+        <div class="mb-3">
+            <label for="receiver" class="form-label">수신자</label>
+            <input type="text" id="receiver" th:field="*{receiverNickname}" class="form-control">
+        </div>
+        <div class="mb-3">
+            <label for="title" class="form-label">제목</label>
+            <input type="text" th:field="*{title}" class="form-control">
+        </div>
+        <div class="mb-3">
+            <label for="content" class="form-label">내용</label>
+            <textarea th:field="*{content}" class="form-control" rows="10"></textarea>
+        </div>
+        <input type="submit" value="쪽지 보내기" class="btn btn-primary my-2">
+    </form>
+    <script>
+        const value = localStorage.getItem('receive');
+        const sender = document.getElementById("sender_nickname").value
+        if (value) {
+            console.log("localStorage에서 가져온 값: " + value);
+            if(sender === value)
+            {
+                alert("송신자와 수신자의 닉네임이 같아요 \n 수정해주세요");
+            }
+            const input = document.getElementById("receiver");
+            input.value = value;
+            localStorage.removeItem('receive'); // 사용 후 삭제
+        }
+    </script>
+</main>
+</html>
+

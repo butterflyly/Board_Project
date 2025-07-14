@@ -1,0 +1,93 @@
+plugins {
+	id 'java'
+	id 'war'
+	id 'org.springframework.boot' version '3.4.2'
+	id 'io.spring.dependency-management' version '1.1.7'
+}
+
+group = 'hello.project'
+version = '0.0.1-SNAPSHOT'
+
+java {
+	toolchain {
+		languageVersion = JavaLanguageVersion.of(17)
+	}
+}
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	// JPA
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+
+	// 타임리프
+	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+
+	// WEB
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+
+	// 롬복
+	compileOnly 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok'
+
+
+	providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+	// mysql
+	runtimeOnly 'com.mysql:mysql-connector-j'
+	implementation 'com.mysql:mysql-connector-j'
+
+	// Spring Security
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+	implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6'
+
+    // 레이아웃 설정
+	implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect'
+
+	//소셜 로그인 관련
+	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+
+	// Valid
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+	// 이메일
+	implementation 'org.springframework.boot:spring-boot-starter-mail'
+	implementation 'org.springframework:spring-context-support'
+
+	// 웹 소켓 라이브러리
+	implementation 'org.springframework.boot:spring-boot-starter-websocket'
+	implementation group: 'it.ozimov', name: 'embedded-redis', version: '0.7.2'
+
+	// json
+	implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.14.2'
+
+	// sockjs
+	implementation 'org.webjars:sockjs-client:1.5.1'
+	implementation 'org.webjars.bower:axios:0.17.1'
+
+	// stomp
+	implementation 'org.webjars:stomp-websocket:2.3.4'
+
+
+	// Redis 주입
+	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+
+	// 소셜탈퇴
+
+}
+
+
+
+tasks.named('test') {
+	useJUnitPlatform()
+}

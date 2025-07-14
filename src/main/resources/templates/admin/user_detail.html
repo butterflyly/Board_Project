@@ -1,0 +1,111 @@
+<html layout:decorate="~{layouts/layout.html}">
+<head>
+    <title>유저 정보</title>
+</head>
+<body>
+<main layout:fragment="content" class="container gap-3" style="width: 1000px;">
+    <div class="card d-flex flex-column align-items-center shadow p-3 mb-5 bg-body rounded" style="margin-top : 10px;">
+        <div class="card-body gap-3">
+            <div class="d-flex align-items-baseline justify-content-center gap-2">
+                <i class="fa-solid fa-user" style="color: #75a8ff;"></i>
+                <p th:text="${user.nickname}+'의 정보'"></p>
+            </div>
+
+            <div class="d-flex align-items-baseline gap-1" th:if="${user.usersImage != null}">
+                <img th:src="${user.usersImage.getUrl()}" class="img-fluid rounded-circle" alt="Profile picture">
+            </div>
+            <div class="d-flex align-items-baseline gap-1">
+                <i class="fa-regular fa-circle-check" style="color: #91c0fd;"></i>
+                <p>사용자 Id :</p>
+                <p th:text="${user.username}"></p>
+            </div>
+            <div class="d-flex gap-1 align-items-baseline">
+                <i class="fa-regular fa-circle-check" style="color: #91c0fd;"></i>
+                <p>닉네임 :</p>
+                <p th:text="${user.nickname}"></p>
+            </div>
+            <div>
+                <button>
+                    <a th:href="@{|/admin/user/info/${user.id}|}">수정하기</a>
+                </button>
+            </div>
+            <div>
+                <a th:href="@{|/admin/user_delete/${user.id}|}" class="btn btn-danger"
+                   onclick="return confirm('계정 복구가 불가능합니다.\계속 하시겠습니까?')">회원삭제</a>
+            </div>
+        </div>
+
+        <div class="card d-flex flex-column align-items-center shadow p-3 mb-5 bg-body rounded" style="margin-top : 10px;">
+            <div class="card-body gap-3">
+                <div class="d-flex align-items-baseline justify-content-center gap-2">
+                    <i class="fa-solid fa-user" style="color: #75a8ff;"></i>
+                    <p th:text="${user.nickname} + '의 게시글'"></p>
+                    <p th:text="${'('+ boardCount+')'}"></p>
+                    <a th:href="@{|/admin/list/ByBoard/${user.id}/qna|}">더보기</a>
+                </div>
+                <table class="table" style="width: 700px;">
+                    <thead class="table-dark">
+                    <tr class="text-center">
+                        <th>제목</th>
+                        <th>작성일</th>
+                        <th>수정일</th>
+                        <th>조회수</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr class="text-center" th:each="board, loop : ${boardList}">
+                        <td class="text-start">
+                            <a th:href="@{|/board/detail/${board.id}|}" th:text="${board.title}"
+                               style="min-width:80px; padding: 12px 0;"></a>
+                        </td>
+                        <td th:text="${#temporals.format(board.createDate, 'yy-MM-dd')}"
+                            style="min-width:80px; padding: 12px 0;"></td>
+                        <td th:if="${board.modifyDate == null}">-</td>
+                        <td th:if="${board.modifyDate != null}"
+                            th:text="${#temporals.format(board.modifyDate, 'yy-MM-dd')}"
+                            style="min-width:80px; padding: 12px 0;"></td>
+                        <td th:text="${board.views}"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="d-flex align-items-baseline justify-content-center gap-2">
+            <i class="fa-solid fa-user" style="color: #75a8ff;"></i>
+            <p th:text="${user.nickname} + '의 댓글'"></p>
+            <p th:text="${'('+ commentCount+')'}"></p>
+            <a th:href="@{|/admin/list/ByComment/${user.id}|}">더보기</a>
+        </div>
+        <table class="table" style="width: 700px;">
+            <thead class="table-dark">
+            <tr class="text-center">
+                <th>게시글 제목</th>
+                <th>내용</th>
+                <th>작성일</th>
+                <th>수정일</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr class="text-center" th:each="comment, loop : ${commentList}">
+                <td th:if="${comment.board != null}">
+                    <a th:href="@{|/board/detail/${comment.board.getId()}|}"
+                       th:text="${comment.board.getTitle()}"
+                       style="min-width:80px; padding: 12px 0;"></a>
+                </td>
+                <td th:if="${comment.board != null}"
+                        th:text="${comment.content}">
+                </td>
+                <td th:text="${#temporals.format(comment.createDate, 'yy-MM-dd')}"
+                    style="min-width:80px; padding: 12px 0;"></td>
+                <td th:if="${comment.modifyDate == null}">-</td>
+                <td th:if="${comment.modifyDate != null}"
+                    th:text="${#temporals.format(comment.modifyDate, 'yy-MM-dd')}"
+                    style="min-width:80px; padding: 12px 0;"></td>
+            </tr>
+            </tbody>
+        </table>
+
+    </div>
+</main>
+</body>
+</html>

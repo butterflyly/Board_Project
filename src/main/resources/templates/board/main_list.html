@@ -1,0 +1,167 @@
+<html layout:decorate="~{layouts/layout}">
+<div layout:fragment="content" class="container my-3">
+    <div style="width:48%; float:left;">
+        <h2>게시글들 모음</h2>
+        <ul class="nav nav-tabs justify-content-center" id="myTab" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true">전체</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="false">질문/답변</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="messages-tab" data-bs-toggle="tab" data-bs-target="#messages" type="button" role="tab" aria-controls="messages" aria-selected="false">자유</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="settings-tab" data-bs-toggle="tab" data-bs-target="#settings" type="button" role="tab" aria-controls="settings" aria-selected="false">건의</button>
+            </li>
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                <div th:each="board : ${boardList}">
+                    <p class="text-center">
+                        <a th:href="@{|/board/detail/${board.id}|}" th:text="${board.title}"></a>
+                    </p>
+                    <hr/>
+                </div>
+            </div>
+            <div class="tab-pane" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+                <div th:each="board : ${boardList2}">
+                    <p class="text-center" th:text="${board.title}"></p>
+                    <hr/>
+                </div>
+            </div>
+            <div class="tab-pane" id="messages" role="tabpanel" aria-labelledby="messages-tab">
+                <div th:each="board : ${boardList3}">
+                    <p class="text-center" >
+                        <a th:href="@{|/board/detail/${board.id}|}" th:text="${board.title}"></a>
+                    </p>
+                    <hr/>
+                </div>
+            </div>
+            <div class="tab-pane" id="settings" role="tabpanel" aria-labelledby="settings-tab">
+                <div th:each="board : ${boardList4}">
+                    <p class="text-center" >
+                        <a th:href="@{|/board/detail/${board.id}|}" th:text="${board.title}"></a>
+                    </p>
+                    <hr/>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div style="width:48%; float:right;">
+        <div style="height:45%;">
+            <br>
+            <h2>핫 게시글(추천순)</h2>
+            <ul class="nav nav-tabs justify-content-center" id="myTab2" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="home2-tab" data-bs-toggle="tab" data-bs-target="#home2" type="button" role="tab" aria-controls="home" aria-selected="true">전체</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="profile2-tab" data-bs-toggle="tab" data-bs-target="#profile2" type="button" role="tab" aria-controls="profile" aria-selected="false">질문/답변</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="messages2-tab" data-bs-toggle="tab" data-bs-target="#messages2" type="button" role="tab" aria-controls="messages" aria-selected="false">자유</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="settings2-tab" data-bs-toggle="tab" data-bs-target="#settings2" type="button" role="tab" aria-controls="settings" aria-selected="false">건의</button>
+                </li>
+            </ul>
+            <div class="tab-content">
+                <div class="tab-pane active" id="home2" role="tabpanel" aria-labelledby="home-tab">
+                    <div th:each="board : ${boardVoterList}">
+                        <p class="text-center">
+                            <a th:href="@{|/board/detail/${board.id}|}" th:text="${board.title}"></a>
+                        </p>
+                        <hr/>
+                    </div>
+                </div>
+                <div class="tab-pane" id="profile2" role="tabpanel" aria-labelledby="profile-tab">
+                    <div th:each="board : ${boardVoterList1}">
+                        <p class="text-center">
+                            <a th:href="@{|/board/detail/${board.id}|}" th:text="${board.title}"></a>
+                        </p>
+                        <hr/>
+                    </div>
+                </div>
+                <div class="tab-pane" id="messages2" role="tabpanel" aria-labelledby="messages-tab">
+                    <div th:each="board : ${boardVoterList2}">
+                        <p class="text-center">
+                            <a th:href="@{|/board/detail/${board.id}|}" th:text="${board.title}"></a>
+                        </p>
+                        <hr/>
+                    </div>
+                </div>
+                <div class="tab-pane" id="settings2" role="tabpanel" aria-labelledby="settings-tab">
+                    <div th:each="board : ${boardVoterList3}">
+                        <p class="text-center">
+                            <a th:href="@{|/board/detail/${board.id}|}" th:text="${board.title}"></a>
+
+                        </p>
+                        <hr/>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div>
+            <br>
+            <h2>핫 게시글(조회수 순)</h2>
+            <ul class="nav nav-tabs justify-content-center" id="myTab3" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="home3-tab" data-bs-toggle="tab" data-bs-target="#home3" type="button" role="tab" aria-controls="home" aria-selected="true">전체</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="profile3-tab" data-bs-toggle="tab" data-bs-target="#profile3" type="button" role="tab" aria-controls="profile" aria-selected="false">질문/답변</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="messages3-tab" data-bs-toggle="tab" data-bs-target="#messages3" type="button" role="tab" aria-controls="messages" aria-selected="false">자유</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="settings3-tab" data-bs-toggle="tab" data-bs-target="#settings3" type="button" role="tab" aria-controls="settings" aria-selected="false">건의</button>
+                </li>
+            </ul>
+            <div class="tab-content">
+                <div class="tab-pane active" id="home3" role="tabpanel" aria-labelledby="home-tab">
+                    <div th:each="board : ${boardHotList}">
+                        <p class="text-center">
+                            <a th:href="@{|/board/detail/${board.id}|}" th:text="${board.title}"></a>
+                        </p>
+                        <hr/>
+                    </div>
+                </div>
+                <div class="tab-pane" id="profile3" role="tabpanel" aria-labelledby="profile-tab">
+                    <div th:each="board : ${boardHotList1}">
+                        <p class="text-center" >
+                            <a th:href="@{|/board/detail/${board.id}|}" th:text="${board.title}"></a>
+
+                        </p>
+                        <hr/>
+                    </div>
+                </div>
+                <div class="tab-pane" id="messages3" role="tabpanel" aria-labelledby="messages-tab">
+                    <div th:each="board : ${boardHotList2}">
+                        <p class="text-center">
+                            <a th:href="@{|/board/detail/${board.id}|}" th:text="${board.title}"></a>
+                        </p>
+                        <hr/>
+                    </div>
+                </div>
+                <div class="tab-pane" id="settings3" role="tabpanel" aria-labelledby="settings-tab">
+                    <div th:each="board : ${boardHotList3}">
+                        <p class="text-center">
+                            <a th:href="@{|/board/detail/${board.id}|}" th:text="${board.title}"></a>
+                        </p>
+                        <hr/>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        var firstTabEl = document.querySelector('#myTab li:last-child a')
+        var firstTab = new bootstrap.Tab(firstTabEl)
+
+        firstTab.show()
+    </script>
+</div>
+</html>

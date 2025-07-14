@@ -1,0 +1,23 @@
+<html layout:decorate="~{layouts/layout}">
+<div layout:fragment="content" class="container my-3">
+    <h4>회원정보</h4>
+    <form th:action="@{|/admin/user/info/${userModifyForm.id}|}" th:object="${userModifyForm}" method="post"
+          enctype="multipart/form-data">
+        <div th:replace="~{form_errors :: formErrorsFragment}"></div>
+        <div>
+            <label for="nickname">닉네임</label>
+            <input type="text" th:field="*{nickname}" class="form-control">
+        </div>
+        <!-- Profile Picture -->
+        <div class="col-md-4">
+            <img th:src="${image.getUrl()}" class="img-fluid rounded-circle" alt="Profile picture">
+            <div class="mb-3">
+                <input type="file" class="form-control" name="file" accept="image/*">
+            </div>
+        </div>
+        <button class="btn btn-primary" id="btn-update">
+            수정
+        </button>
+    </form>
+</div>
+</html>

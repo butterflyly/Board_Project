@@ -1,0 +1,137 @@
+<html layout:decorate="~{layouts/layout}">
+<main layout:fragment="content" class="container my-3 d-flex gap-1">
+    <div style="margin-top:2%;">
+        <ul class="list-group">
+            <li class="list-group-item" aria-current="true" th:classappend="${boardName == 0} ? 'active'">
+                <a th:href="@{/admin/deleteBoard/list/qna}">질문과답변</a>
+            </li>
+            <li class="list-group-item" th:classappend="${boardName == 1} ? 'active'">
+                <a th:href="@{/admin/deleteBoard/list/free}">자유게시판</a>
+            </li>
+            <li class="list-group-item" th:classappend="${boardName == 2} ? 'active'">
+                <a th:href="@{/admin/deleteBoard/list/bug}">버그및건의</a>
+            </li>
+        </ul>
+    </div>
+
+    <div class="flex-grow-1">
+        <div>
+            <ul class="nav d-flex align-items-baseline gap-2">
+                <span>정렬 기준</span>
+                <li class="nav-item">
+                    <a class="nav-link btn btn-primary text-white" th:classappend="${#strings.equals(param.sort, 'create_Date')} ? 'active'" th:href="@{|?sort=create_Date&page=${paging.number}|}">최신순</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link btn btn-primary text-white" th:classappend="${#strings.equals(param.sort, 'views')} ? 'active'" th:href="@{|?sort=views&page=${paging.number}|}">조회수 순</a>
+                </li>
+            </ul>
+        </div>
+        <table class="table">
+            <thead class="table-info">
+            <tr class="text-center">
+                <th>번호</th>
+                <th style="width:50%">제목</th>
+                <th>글쓴이</th>
+                <th>작성일시</th>
+                <th>수정일시</th>
+                <th>추천</th>
+                <th>조회수</th>
+            </tr>
+            </thead>
+            <tbody>
+
+            <tr class="text-center" th:each="board , loop: ${paging}">
+                <td th:text="${paging.getTotalElements -(paging.number * paging.size)-loop.count + 1}"></td>
+                <td style="width:50%">
+                    <a th:href="@{|/admin/deleteBoard/detail/${board.id}|}" th:text="${board.title}"></a>
+                    <span class="text-danger small ms-2"
+                          th:if="${#strings.length(board.imageUrls) >10}" th:text="Image"></span>
+                </td>
+                <td><span th:if="${board.users != null}" th:text="${board.users.nickname}"></span>
+                    <span th:if="${board.users == null}" th:text="${board.delete_user_nickname}"></span>
+                </td>
+                <td th:text="${#temporals.format(board.createDate, 'yyyy-MM-dd HH:mm')}"></td>
+                <td th:text="${#temporals.format(board.modifyDate, 'yyyy-MM-dd HH:mm')}"></td>
+                <td th:text="${#lists.size(board.voters)}"></td>
+                <td th:text="${board.views}"></td>
+
+            </tr>
+            </tbody>
+        </table>
+        <!-- 페이징처리 시작 -->
+        <div th:if="${!paging.isEmpty()}" th:with="queryStrBase = '?kw=' + ${param.kw != null ? param.kw : ''}"> <!-- 페이징 변수가 빈 값이 아닌경우 동작-->
+            <ul class="pagination justify-content-center">
+                <!-- 이전 페이지가 없는 경우 비활성화
+                  paging.hasPrevious => 이전값이 있다는 의미
+                 -->
+                <li class="page-item" th:classappend="${!paging.hasPrevious} ? 'disabled'">
+                    <!-- page넘버 -1씩 증가-->
+                    <a th:if="${kw == null}" class="page-link"
+                       th:href="@{|?sort=${sort}&page=${paging.number-1}|}">
+                        <span>이전</span>
+                    </a>
+                    <a th:if="${kw != null}" class="page-link"
+                       th:href="@{|?sort=${sort}&type=${search}&kw=${kw}&page=${paging.number-1}|}">
+                        <span>이전</span>
+                    </a>
+                </li>
+                <!-- th:each="page: ${#numbers.sequence(0, paging.totalPages-1)}"
+                   시작 번호부터 끝 번호까지의 루프를 만드는 타임리프 문법
+                   page >= paging.number-5 and page <= paging.number+5 : 페이지 리스트가 좌우로 5개씩 보이도록
+                -->
+                <li th:each="page: ${#numbers.sequence(0, paging.totalPages-1)}"
+                    th:if="${page >= paging.number-5 and page <= paging.number+5}"
+                    th:classappend="${page == paging.number} ? 'active'"
+                    class="page-item">
+                    <a th:if="${kw == null}"
+                       th:text="${page}" class="page-link"
+                       th:href="@{|?sort=${sort}&page=${page}|}"></a>
+                    <a th:if="${kw != null}"
+                       th:text="${page}" class="page-link"
+                       th:href="@{|?sort=${sort}&type=${search}&kw=${kw}&page=${page}|}"></a>
+                </li>
+                <!-- 다음 페이지가 없는 경우 비활성화
+                  paging.hasNext => 다음값이 있다는 의미
+                 -->
+                <li class="page-item" th:classappend="${!paging.hasNext} ? 'disabled'">
+                    <!-- page넘버 +1씩 증가-->
+                    <a th:if="${kw == null}"
+                       class="page-link" th:href="@{|?sort=${sort}&page=${paging.number+1}|}">
+                        <span>다음</span>
+                    </a>
+                    <a th:if="${kw != null}"
+                       class="page-link" th:href="@{|?sort=${sort}&type=${search}&kw=${kw}&page=${paging.number+1}|}">
+                        <span>다음</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <!-- 페이징처리 끝 -->
+
+        <div class="col-6">
+            <form>
+                <div class="input-group">
+                    <input type="hidden" name="sort" th:value="${sort}">
+                    <select name="type" required>
+                        <option value="title" th:selected="${search}=='title'">제목</option>
+                        <option value="content" th:selected="${search}=='content'">내용</option>
+                        <option value="titleOrcontent" th:selected="${search}=='titleOrcontent'">제목/내용</option>
+                        <option value="nickname" th:selected="${search}=='nickname'">작성자</option>
+                    </select>
+                    <input type="text" name="kw" class="form-control" th:value="${param.kw}">
+                    <button class="btn btn-outline-secondary" id="btn_search">찾기</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <script type="text/javascript">
+        const order_elements = document.getElementsByClassName('ordering');
+     Array.from(order_elements).forEach(function(element) {
+      element.addEventListener('click', function() {
+          location.href = this.dataset.uri;
+      })
+  })
+
+    </script>
+</main>
+</html>

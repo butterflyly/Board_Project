@@ -1,0 +1,16 @@
+<html layout:decorate="~{layouts/layout}">
+<div layout:fragment="content" class="container my-3">
+    <h4>회원정보</h4>
+    <form th:action="@{|/admin/deleteUsers/user/info/${userModifyForm.id}|}" th:object="${userModifyForm}" method="post">
+        <div th:replace="~{form_errors :: formErrorsFragment}"></div>
+        <!--<input type="hidden" id="id" th:value="*{id}" name="id"> -->
+        <div>
+            <label for="nickname">닉네임</label>
+            <input type="text" th:field="*{nickname}" class="form-control">
+        </div>
+        <button class="btn btn-primary" id="btn-update">
+            수정
+        </button>
+    </form>
+</div>
+</html>

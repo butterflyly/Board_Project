@@ -1,0 +1,61 @@
+<html layout:decorate="~{layouts/layout}">
+<main layout:fragment="content" class="container my-3 d-flex gap-1">
+    <div style="margin-top:2%;">
+        <input type="hidden" id="connection_nickname" th:value="${connection_nickname}">
+        <ul class="list-group">
+            <li class="list-group-item" th:classappend="${messageType == 0} ? 'active'">
+                <a th:href="@{/message/send/list}" >메세지 송신 리스트</a>
+            </li>
+            <li class="list-group-item" aria-current="true" th:classappend="${messageType == 1} ? 'active'">
+                <a th:href="@{/message/recevie/list}">메세지 수신 리스트</a>
+            </li>
+        </ul>
+    </div>
+    <div class="flex-grow-1">
+        <table class="table">
+            <thead class="table-info">
+            <tr class="text-center">
+                <th style="width:50%">제목</th>
+                <th>송신자</th>
+                <th>송신일자</th>
+            </tr>
+            </thead>
+            <tbody>
+            <!-- 상단 고정 게시글 출력 -->
+            <tr class="text-center" th:each="message , loop: ${paging}">
+                <td style="width:50%">
+                    <a th:href="@{|/message/receive/detail/${message.id}|}"
+                       th:text="${message.title}"
+                    ></a>
+                </td>
+                <td th:text="${message.Sendernickname}"></td>
+                <td th:text="${#temporals.format(message.sendTime, 'yyyy-MM-dd HH:mm')}"></td>
+            </tr>
+            </tbody>
+        </table>
+        <!-- 페이징처리 시작 -->
+        <div th:if="${!paging.isEmpty()}">
+            <ul class="pagination justify-content-center">
+                <li class="page-item" th:classappend="${!paging.hasPrevious} ? 'disabled'">
+                    <a class="page-link"
+                       th:href="@{|?page=${paging.number-1}|}">
+                        <span>이전</span>
+                    </a>
+                </li>
+                <li th:each="page: ${#numbers.sequence(0, paging.totalPages-1)}"
+                    th:if="${page >= paging.number-5 and page <= paging.number+5}"
+                    th:classappend="${page == paging.number} ? 'active'"
+                    class="page-item">
+                    <a th:text="${page}" class="page-link" th:href="@{|?page=${page}|}"></a>
+                </li>
+                <li class="page-item" th:classappend="${!paging.hasNext} ? 'disabled'">
+                    <a class="page-link" th:href="@{|?page=${paging.number+1}|}">
+                        <span>다음</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <!-- 페이징처리 끝 -->
+    </div>
+</main>
+</html>

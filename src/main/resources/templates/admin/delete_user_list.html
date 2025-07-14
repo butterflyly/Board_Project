@@ -1,0 +1,19 @@
+<html layout:decorate="~{layouts/layout}">
+<div layout:fragment="content" class="container my-3">
+    <table class="table">
+        <thead class="table-info">
+        <tr class="text-center">
+            <th>삭제유저 닉네임</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr class="text-center" th:each="user , loop: ${userList}">
+            <td>
+                <a th:href="@{|/admin/delete/user/${user.id}|}" th:text="${user.nickname}">
+                </a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</html>

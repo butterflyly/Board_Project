@@ -1,0 +1,19 @@
+.disabled{
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+.read-board
+{
+ color : red;
+}
+
+.unread-board
+{
+  color : greed;
+}
+
+
+.tr read a {
+    color : red;
+}

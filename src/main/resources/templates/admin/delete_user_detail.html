@@ -1,0 +1,42 @@
+<html layout:decorate="~{layouts/layout.html}" xmlns:layout="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <title>유저 정보</title>
+</head>
+<body>
+<main layout:fragment="content" class="container gap-3" style="width: 1000px;">
+    <div class="card d-flex flex-column align-items-center shadow p-3 mb-5 bg-body rounded" style="margin-top : 10px;">
+        <div class="card-body gap-3">
+            <div class="d-flex align-items-baseline justify-content-center gap-2">
+                <i class="fa-solid fa-user" style="color: #75a8ff;"></i>
+                <p th:text="${user.nickname}+'의 정보'"></p>
+            </div>
+
+
+            <div class="d-flex align-items-baseline gap-1">
+                <i class="fa-regular fa-circle-check" style="color: #91c0fd;"></i>
+                <p>사용자 Id :</p>
+                <p th:text="${user.userId}"></p>
+            </div>
+            <div class="d-flex gap-1 align-items-baseline">
+                <i class="fa-regular fa-circle-check" style="color: #91c0fd;"></i>
+                <p>닉네임 :</p>
+                <p th:text="${user.nickname}"></p>
+            </div>
+            <div>
+                <form th:action="@{|/admin/DeleteUsers/user/restore/${user.id}|}" method="post">
+                    <button type="submit" onclick="return confirm('유저를 복원하시겠습니까?');"
+                            class="recommend btn btn-sm btn-outline-secondary">
+                        복원
+                    </button>
+                </form>
+            </div>
+            <div>
+                <a th:href="@{|/admin/DeleteUsers/delete/${user.id}|}" class="btn btn-danger"
+                   onclick="alert('계정 복구가 불가능합니다.\계속 하시겠습니까?')">회원삭제</a>
+            </div>
+        </div>
+    </div>
+</main>
+</body>
+</html>

@@ -1,0 +1,26 @@
+<html layout:decorate="~{layouts/layout}">
+<head>
+    <title>관리자 페이지</title>
+</head>
+<main layout:fragment="content" class="container my-3">
+
+<div>
+    <a href="/admin/user_list">유저 관리 페이지</a>
+</div>
+<div>
+   <a href="/admin/deleteUsers/user_list">삭제 유저 관리 페이지</a>
+</div>
+<div>
+    <a href="/admin/deleteBoard/list/qna">삭제 게시글 관리 페이지</a>
+</div>
+<div>
+    <h3>차트 링크</h3>
+    <a href="/admin/users/log/chart">유저 접속 로그 차트</a><br>
+    <a href="/admin/board/create/chart">게시글 작성회수 차트</a><br>
+    <a href="/admin/board/views/chart">게시글 조회수 차트</a><br>
+    <a href="/admin/users/register/chart">회원가입 유저수 통계 차트</a><br>
+    <a href="/admin/users/delete-chart">회원 탈퇴 유저수 차트</a><br>
+    <a href="/admin/comment/create/chart">댓글 통계 차트</a><br>
+</div>
+</main>>
+</html>

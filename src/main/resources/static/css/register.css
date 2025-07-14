@@ -1,0 +1,59 @@
+.idInput {
+    display: flex;
+    margin-bottom: -10px;
+}
+
+
+.checkIdBtn {
+    font-size: 12px;
+    padding: 12px;
+    margin-top: 10px;
+    margin-bottom: 20px;
+    width: 8%;
+    background-color: #865bd8;
+    color: #fff;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    border: none;
+    border-radius: 5px;
+    margin-left: 2%;
+}
+
+.changeBtn {
+    font-size: 12px;
+    display: none;
+    margin-left: 2%;
+    width: 8%;
+    height: 40px;
+    background-color: #865bd8;
+    color: #fff;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    border: none;
+    border-radius: 5px;
+}
+
+.checkIdBtn:hover {
+    background-color: #672bbf;
+}
+
+.changeBtn:hover {
+    background-color: #672bbf;
+}
+
+.inputs {
+    width: 90%;
+    padding: 12px;
+    margin-bottom: 20px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+.error {
+    color: #dc3545;
+}
+
+.error-input {
+    border-color: #dc3545;
+}

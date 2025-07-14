@@ -1,0 +1,54 @@
+<html layout:decorate="~{layouts/layout}">
+<main layout:fragment="content" class="container my-3">
+    <!--  <form th:action method="post" th:object="${pwChangeForm}" onsubmit="ChangePasswordForm__submit(this); return false;"> -->
+    <form th:action method="post" th:object="${pwChangeForm}">
+        <div th:replace="~{form_errors :: formErrorsFragment}"></div>
+        <div class="mb-3">
+            <label class="form-label">이전 비밀번호</label>
+            <input type="password" th:field="*{prePassword}" class="form-control">
+        </div>
+        <div class="mb-3">
+            <label class="form-label">새 비밀번호</label>
+            <input type="password" th:field="*{newPassword1}" class="form-control">
+        </div>
+        <div class="mb-3">
+            <label class="form-label">새 비밀번호 확인</label>
+            <input type="password" th:field="*{newPassword2}" class="form-control">
+        </div>
+        <button class="btn btn-primary">비밀번호 변경</button>
+    </form>
+
+    <script th:inline="javascript">
+        function ChangePasswordForm__submit(form) {
+          form.prePassword.value = form.prePassword.value.trim();
+          form.newPassword1.value = form.newPassword1.value.trim();
+          form.newPassword2.value = form.newPassword2.value.trim();
+
+          if (form.prePassword.value.length  == 0) {
+            alert('이전 비밀번호를 입력해주세요');
+            form.prePassword.focus();
+            return false;
+          }
+
+          if (form.newPassword1.value.length  == 0) {
+            alert('새 비밀번호를 입력해주세요.');
+            form.newPassword1.focus();
+            return false;
+          }
+
+          if (form.newPassword2.value.length  == 0) {
+            alert('비밀번호 확인을 입력해주세요.');
+            form.newPassword2.focus();
+            return false;
+          }
+
+          if (!(form.newPassword1.value == form.newPassword2.value)) {
+            alert('새 비밀번호와 새 비밀번호 확인이 다릅니다.');
+            return false;
+          }
+
+          form.submit();
+        }
+    </script>
+</main>
+</html>

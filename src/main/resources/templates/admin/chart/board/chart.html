@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layouts/layout}">
+<head>
+    <title>최근 한 달간 게시글 차트</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<main layout:fragment="content" class="container my-3">
+    <canvas id="postChart"></canvas>
+    <script>
+        fetch('/board/chart')
+            .then(response => response.json())
+            .then(data => {
+                const ctx = document.getElementById('postChart').getContext('2d');
+                const labels = data.map(item => item.date);
+                const counts = data.map(item => item.count);
+
+                const chartData = {
+                    labels: labels,
+                    datasets: [{
+                        label: '게시글 작성 횟수',
+                        data: counts,
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 1
+                    }]
+                };
+
+                const chart = new Chart(ctx, {
+                    type: 'line', // 또는 'bar' 등 원하는 차트 타입
+                    data: chartData,
+                    options: {
+                        scales: {
+                            x: {
+                                title: {
+                                    display: true,
+                                    labelString: '날짜'
+                                }
+                            },
+                            y: {
+                                title: {
+                                    display: true,
+                                    labelString: '게시글 횟수'
+                                },
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+            });
+    </script>
+</main>
+</html>

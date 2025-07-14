@@ -1,0 +1,53 @@
+<html layout:decorate="~{layouts/layout}">
+<div layout:fragment="content" class="container my-3">
+    <table class="table">
+        <thead class="table-info">
+        <tr class="text-center">
+            <th>유저 닉네임</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr class="text-center" th:each="user , loop: ${userList}">
+            <td>
+                <a th:href="@{|/admin/user/${user.id}|}" th:text="${user.nickname}">
+                </a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <!-- 페이징처리 시작 -->
+    <div th:if="${!userList.isEmpty()}" th:with="queryStrBase = '?kw=' + ${param.kw != null ? param.kw : ''}"> <!-- 페이징 변수가 빈 값이 아닌경우 동작-->
+        <ul class="pagination justify-content-center">
+            <!-- 이전 페이지가 없는 경우 비활성화
+              userList.hasPrevious => 이전값이 있다는 의미
+             -->
+            <li class="page-item" th:classappend="${!userList.hasPrevious} ? 'disabled'">
+                <!-- page넘버 -1씩 증가-->
+                <a class="page-link"
+                   th:href="@{|?page=${userList.number-1}|}">
+                    <span>이전</span>
+                </a>
+            </li>
+            <!-- th:each="page: ${#numbers.sequence(0, userList.totalPages-1)}"
+               시작 번호부터 끝 번호까지의 루프를 만드는 타임리프 문법
+               page >= userList.number-5 and page <= userList.number+5 : 페이지 리스트가 좌우로 5개씩 보이도록
+            -->
+            <li th:each="page: ${#numbers.sequence(0, userList.totalPages-1)}"
+                th:if="${page >= userList.number-5 and page <= userList.number+5}"
+                th:classappend="${page == userList.number} ? 'active'"
+                class="page-item">
+                <a th:text="${page}" class="page-link" th:href="@{|?page=${page}|}"></a>
+            </li>
+            <!-- 다음 페이지가 없는 경우 비활성화
+              userList.hasNext => 다음값이 있다는 의미
+             -->
+            <li class="page-item" th:classappend="${!userList.hasNext} ? 'disabled'">
+                <!-- page넘버 +1씩 증가-->
+                <a class="page-link" th:href="@{|?page=${userList.number+1}|}">
+                    <span>다음</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>
+</html>

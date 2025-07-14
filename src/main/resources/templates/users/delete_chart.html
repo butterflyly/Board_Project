@@ -1,0 +1,40 @@
+<!-- Thymeleaf 템플릿 -->
+<html layout:decorate="~{layouts/layout}">
+<head>
+    <title>회원가입 일자 통계</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+<canvas id="myChart"></canvas>
+<script th:inline="javascript">
+    const ctx = document.getElementById('myChart').getContext('2d');
+    const label = [[${chartData.labels}]]; // Spring에서 넘겨주는 날짜 데이터
+    const data = [[${chartData.data}]]; // Spring에서 넘겨주는 게시글 수 데이터
+
+    const myChart = new Chart(ctx, {
+        type: 'line', // 또는 'bar', 'pie' 등
+        data: {
+            labels: label,
+            datasets: [{
+                label: '유저 삭제데이터',
+                data: data,
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y : {
+
+                    ticks: {
+                        maxTicksLimit: 4
+                    }
+                    ,beginAtZero: true
+                    ,suggestedMax: 2
+                }
+            }
+        }
+    });
+
+</script>
+</body>
+</html>

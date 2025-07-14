@@ -1,0 +1,53 @@
+<!-- Thymeleaf 템플릿 -->
+<html layout:decorate="~{layouts/layout}">
+<head>
+    <title>조회수 통계</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<main layout:fragment="content" class="container my-3">
+<canvas id="myChart"></canvas>
+<script th:inline="javascript">
+    const ctx = document.getElementById('myChart').getContext('2d');
+    const label = [[${Board_Views_Data_qna.labels}]]; // Spring에서 넘겨주는 날짜 데이터
+    const data = [[${Board_Views_Data_qna.data}]]; // Spring에서 넘겨주는 게시글 수 데이터
+    const Free = [[${Board_Views_Data_free.data}]];
+    const Bug = [[${Board_Views_Data_bug.data}]];
+
+
+    const myChart = new Chart(ctx, {
+        data: {
+            labels: label,
+            datasets: [{
+                type: 'line', // 또는 'bar', 'pie' 등
+                label: '질문 게시판',
+                data: data,
+                borderWidth: 1
+            },
+            {
+                type: 'line',
+                label: "자유게시판",
+                data: Free,
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 1,
+            },
+            {
+                type: 'line',
+                label: "버그 게시판",
+                data: Bug,
+                borderColor: 'rgba(153, 102, 255, 1)',
+                borderWidth: 1,
+            }
+            ]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+
+</script>
+</main>
+</html>

@@ -1,0 +1,33 @@
+<html layout:decorate="~{layouts/layout}">
+<main layout:fragment="content" class="container my-3">
+    <h5 class="my-3 border-bottom pb-2" th:text="${boardName}"></h5>
+    <form th:action="@{|/board/modify/${boardCreateForm.id}|}"
+          th:object="${boardCreateForm}"  method="post" enctype="multipart/form-data">
+        <div th:replace="~{form_errors :: formErrorsFragment}"></div>
+        <div th:if="*{nickname == '관리자'}">
+            <input type="checkbox" th:field="*{fix}">
+            <label th:text="'상단 고정'"></label>
+        </div>
+        <div class="mb-3">
+            <label for="title" class="form-label">제목</label>
+            <input type="text" th:field="*{title}" class="form-control">
+        </div>
+        <div class="mb-3">
+            <label for="content" class="form-label">내용</label>
+            <textarea th:field="*{content}" class="form-control" rows="10"></textarea>
+        </div>
+        <div class="form-floating mb-3">
+            <th:block th:each="image : ${Image}">
+                <img th:src="${image}" alt="Image" width="200px" height="200px">
+                 <a th:href="@{/board/Image/delete/{imageId}/{boardId}(imageId=${image.getId()} , boardId=${boardCreateForm.id})}"
+                   class="btn btn-danger">파일삭제</a>
+            </th:block>
+            <div class="form-floating mb-3">
+                <input type="file" name="files" class="form-control" id="files" multiple="multiple">
+                <label for="files">이미지 업로드</label>
+            </div>
+        </div>
+        <input type="submit" value="수정하기" class="btn btn-primary my-2">
+    </form>
+</main>
+</html>
