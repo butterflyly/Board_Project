@@ -39,11 +39,11 @@
 
 ***
 
-## 5. 참고한 웹 사이트 및 블로그
+## 5. 참고한 웹 페이지 및 블로그
  - https://wikidocs.net/book/7601
  - https://velog.io/@puar12/series/%EC%A0%90%ED%94%84%ED%88%AC%EC%8A%A4%ED%94%84%EB%A7%81%EB%B6%80%ED%8A%B8
  - https://getbootstrap.com/
-
+ - 등 기타 웹사이트 및 블로그
 
 
 
