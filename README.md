@@ -43,7 +43,9 @@
  - https://wikidocs.net/book/7601
  - https://velog.io/@puar12/series/%EC%A0%90%ED%94%84%ED%88%AC%EC%8A%A4%ED%94%84%EB%A7%81%EB%B6%80%ED%8A%B8
  - https://getbootstrap.com/
+ - https://velog.io/@location/series/SpringBoot-%EA%B2%8C%EC%8B%9C%ED%8C%90-%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8 (개인 블로그)
  - 등 기타 웹사이트 및 블로그
+
 
 
 
