@@ -2,17 +2,22 @@
 
 ## 1. 프로젝트 소개
 
+간단한 커뮤니티 형식으로 유저간 커뮤니케이션 웹 페이지를 만들어 보았다.
+
+자세한 기능은 후술
 
 ***
 
-1. 참고한 웹 사이트 및 블로그
- - https://wikidocs.net/book/7601
- - https://velog.io/@puar12/series/%EC%A0%90%ED%94%84%ED%88%AC%EC%8A%A4%ED%94%84%EB%A7%81%EB%B6%80%ED%8A%B8
- - https://getbootstrap.com/
+## 2. 개발환경
 
+  - Version : Java 17
+  - IDE : IntelliJ
+  - Framework : SpringBoot 3.4.2
+  - ORM : JPA
 
+***
 
-2. 프로젝트 구성
+## 3. 주요 기능
  - 게시글 작성 CRUD
  - 유저 CRUD
  - 댓글 및 대댓글 CRUD
@@ -23,6 +28,14 @@
  - 회원간 메세지 기능
  - 소셜 로그인 기능(네이버, 구글)
 
-## 게시글 작성 CRUD
+***
+
+
+### 4. 참고한 웹 사이트 및 블로그
+ - https://wikidocs.net/book/7601
+ - https://velog.io/@puar12/series/%EC%A0%90%ED%94%84%ED%88%AC%EC%8A%A4%ED%94%84%EB%A7%81%EB%B6%80%ED%8A%B8
+ - https://getbootstrap.com/
+
+
 
 
