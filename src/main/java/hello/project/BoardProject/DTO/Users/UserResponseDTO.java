@@ -18,6 +18,7 @@ public class UserResponseDTO {
     private UsersImage usersImage;
     private LocalDateTime user_delete_createDate;
     private String providers;
+    private String providerIds;
 
     public UserResponseDTO(Users users)
     {
@@ -30,6 +31,7 @@ public class UserResponseDTO {
         this.usersImage = users.getImage();
         this.user_delete_createDate = users.getUser_delete_createDate();
         this.providers = users.getProviders();
+        this.providerIds = users.getProviderIds();
     }
 
 

@@ -10,24 +10,14 @@ import hello.project.BoardProject.OAuth2.Naver.NaverUserDetails;
 import hello.project.BoardProject.Repository.Users.ImageRepository;
 import hello.project.BoardProject.Repository.Users.OAuth2AccesTokenDataRepository;
 import hello.project.BoardProject.Repository.Users.UserRepository;
-import hello.project.BoardProject.Service.ImageService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.crossstore.ChangeSetPersister;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
-import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
-
-import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.Collections;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -37,36 +27,28 @@ import java.util.Optional;
  * loadUserByUsername 메서드가 실행되도록 되어있다.
  * */
 @Service
-@RequiredArgsConstructor
 @Slf4j
+@RequiredArgsConstructor
 public class PrincipalOAuth2UserService extends DefaultOAuth2UserService {
 
     private final UserRepository userRepository;
     private final ImageRepository imageRepository;
     private final OAuth2AccesTokenDataRepository oAuth2AccesTokenDataRepository;
-  //  private final RedisUtil redisUtil;
 
-    private final long ACCESS_TOKEN_EXPIRATION = 3600 * 1000;
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
 
-        OAuth2UserService<OAuth2UserRequest, OAuth2User> service = new DefaultOAuth2UserService();
-        OAuth2User oAuth2User = service.loadUser(userRequest); // OAauh2의 정보를 가져옴
+        OAuth2User oAuth2User = super.loadUser(userRequest); // OAauh2의 정보를 가져옴
 
         log.info("getAttributes : {}",oAuth2User.getAttributes());
 
-
-        // 카카오(혹은 구글) 서버에서 발급해주는 AccessToken 추출
+        // 네이버(혹은 구글) 서버에서 발급해주는 AccessToken 추출
         String oauth2AccessToken = userRequest.getAccessToken().getTokenValue();  // 소셜엑세스토큰 값 가져오기
-        Map<String, Object> originAttributes = oAuth2User.getAttributes(); // OAuth2User의 attribute
 
 
         String provider = userRequest.getClientRegistration().getRegistrationId(); // 소셜사이트 정보 가져오기
         OAuth2UserInfo oAuth2UserInfo = null;
-
-        // OAuthAttributes: OAuth2User의 attribute를 서비스 유형에 맞게 담아줄 클래스
-      //  OAuthAttributes attributes = OAuthAttributes.of(registrationId, originAttributes);
 
         // 뒤에 진행할 다른 소셜 서비스 로그인을 위해 구분 => 구글
         if(provider.equals("google")){
@@ -79,21 +61,21 @@ public class PrincipalOAuth2UserService extends DefaultOAuth2UserService {
             oAuth2UserInfo = new NaverUserDetails(oAuth2User.getAttributes());
         }
 
-
         String providerId = oAuth2UserInfo.getProviderId();
         String email = oAuth2UserInfo.getEmail();
         String loginId = provider + "_" + providerId;
-        String name = oAuth2UserInfo.getName();
-        UserRole role = UserRole.USER;
+        String name = oAuth2UserInfo.getName()+"("+ provider + ")"; // 임시로 소셜 플랫폼 이름을 닉네임에 넣어줌
+        UserRole role = UserRole.GUEST;
 
         Users findMember = userRepository.findByusername(loginId).orElse(null);
         Users member;
 
         if (findMember == null) {
+
             member = Users.builder()
                     .username(loginId)
-                    .nickname(name)
                     .email(email)
+                    .nickname(name)
                     .providers(provider)
                     .providerIds(providerId)
                     .userRole(role)
@@ -111,6 +93,7 @@ public class PrincipalOAuth2UserService extends DefaultOAuth2UserService {
             member = findMember;
         }
 
+        // 임시로 엑세스 토큰을 데이터베이스화해서 저장
         Optional<OAuth2AccesTokenData> oAuth2AccesTokenData = oAuth2AccesTokenDataRepository.findByUsername(member.getUsername());
 
         // 토큰값이 비어있는 경우
@@ -124,14 +107,6 @@ public class PrincipalOAuth2UserService extends DefaultOAuth2UserService {
 
             oAuth2AccesTokenDataRepository.save(tokenData);
         }
-
-
-
-        /*레디스 소셜 로그인 토큰 저장*/
-       // redisService.setValuesWithTimeout("AT(oauth2):" + loginId , oauth2AccessToken, ACCESS_TOKEN_EXPIRATION);
-
-
-        List<GrantedAuthority> authorities = Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER"));
 
         return new PrincipalDetails(member, oAuth2User.getAttributes());
     }

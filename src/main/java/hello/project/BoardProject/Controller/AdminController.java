@@ -45,8 +45,6 @@ public class AdminController {
     private final LoginLogService loginLogService;
     private final Delete_UserService deleteUserService;
 
-    private static UserResponseDTO userdata;
-
     /*
      관리자 메인 페이지
      */

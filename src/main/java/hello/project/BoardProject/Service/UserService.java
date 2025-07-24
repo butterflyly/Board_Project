@@ -15,6 +15,7 @@ import hello.project.BoardProject.Entity.Users.UserRole;
 import hello.project.BoardProject.Entity.Users.Users;
 import hello.project.BoardProject.Entity.Users.UsersImage;
 import hello.project.BoardProject.Error.DataNotFoundException;
+import hello.project.BoardProject.Form.Users.UserRegisterForm;
 import hello.project.BoardProject.Repository.Board.BoardNotVoterRepository;
 import hello.project.BoardProject.Repository.Board.BoardRepository;
 import hello.project.BoardProject.Repository.Board.BoardVoterRepository;
@@ -416,8 +417,6 @@ public class UserService {
     }
 
 
-
-
     // 랜덤 비밀번호 생성
     public static class PasswordGenerator {
         private static final String CHAR_LOWER = "abcdefghijklmnopqrstuvwxyz";
@@ -584,9 +583,7 @@ public class UserService {
 
                 return true;
             } else {
-
                 log.info("실패함?");
-
                 // 연결 끊기 실패
                 return false;
             }
@@ -597,6 +594,24 @@ public class UserService {
             e.printStackTrace();
             return false;
         }
+    }
+
+
+    public void OAuth2Register(UserRegisterForm userRegisterForm) {
+        UserResponseDTO userResponseDTO = getUserEmailDTO(userRegisterForm.getEmail());
+
+        UserRequestDTO userRequestDTO = new UserRequestDTO();
+        userRequestDTO.setId(userResponseDTO.getId());
+        userRequestDTO.setUsername(userResponseDTO.getUsername());
+        userRequestDTO.setNickname(userRegisterForm.getNickname());
+        userRequestDTO.setEmail(userRegisterForm.getEmail());
+        userRequestDTO.setUserRole(UserRole.USER);
+        userRequestDTO.setProviders(userResponseDTO.getProviders());
+        userRequestDTO.setProviderIds(userResponseDTO.getProviderIds());
+        userRequestDTO.setCreateDate(LocalDateTime.now());
+
+        Users users = userRequestDTO.ModifytoEntity();
+        userRepository.save(users);
     }
 
 }

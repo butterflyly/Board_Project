@@ -18,22 +18,24 @@ public class UserRequestDTO {
     private String email;
     private LocalDateTime createDate;
     private UserRole userRole;
+    private String providers;
+    private String providerIds;
 
     public Users toEntity()
     {
         return Users.builder().
                 username(username).password(password)
                         .nickname(nickname).email(email)
-                        .createDate(createDate).userRole(userRole).
+                        .createDate(LocalDateTime.now()).userRole(userRole).
                 build();
     }
 
     public Users ModifytoEntity()
     {
         return Users.builder().id(id).
-                username(username).password(password)
-                .nickname(nickname).email(email)
-                .createDate(LocalDateTime.now()).
+                username(username)
+                .nickname(nickname).email(email).userRole(userRole).
+                providers(providers).providerIds(providerIds).createDate(createDate).
                 build();
     }
 }

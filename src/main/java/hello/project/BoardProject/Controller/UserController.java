@@ -6,6 +6,7 @@ import hello.project.BoardProject.DTO.ImageUploadDTO;
 import hello.project.BoardProject.DTO.Users.ImageResponseDTO;
 import hello.project.BoardProject.DTO.Users.UserResponseDTO;
 import hello.project.BoardProject.Entity.Users.OAuth2AccesTokenData;
+import hello.project.BoardProject.Entity.Users.Users;
 import hello.project.BoardProject.Error.DataNotFoundException;
 import hello.project.BoardProject.Form.Users.PWChangeForm;
 import hello.project.BoardProject.Form.Users.PWCheckForm;
@@ -21,7 +22,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.*;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -118,7 +122,6 @@ public class UserController {
             return true;
         }
     }
-
 
     /*
     이메일 중복체크

@@ -1,0 +1,34 @@
+<html layout:decorate="~{layouts/layout}">
+<main layout:fragment="content" class="container my-3">
+    <form th:action="@{/oauth2/signUp}" method="post" th:object="${userRegisterForm}"
+          onsubmit="return validateForm()">
+        <div class="idInput">
+            <input type="text" th:field="*{nickname}" placeholder="닉네임"
+                   class="inputs" th:errorclass="error-input">
+            <button type="button" id="duplicateCheckNicknameButton" onclick="checkDuplicateNickname()" class="checkIdBtn">중복 확인</button>
+            <button type="button" id="changeNicknameButton" onclick="changeNickname()" class="changeBtn">변경</button>
+        </div>
+        <div class="error" th:errors="*{nickname}"></div> <br>
+
+        <div class="idInput">
+            <input type="email" th:field="*{email}" placeholder="이메일" class="inputs">
+            <input type="hidden" id="email_Check" name="email_Check"
+                   th:value="${email_Check}">
+            <button type="button" id="duplicateCheckEamilButton" onclick="sendEmail()" class="checkIdBtn">인증번호 전송</button>
+            <button type="button" id="changeEmailButton" onclick="changeEmail()" class="changeBtn">변경</button>
+        </div>
+        <div id="verificationMessage"></div> <br>
+        <div id="div_invisible">
+            <input type="text" th:field="*{inputCode}" placeholder="인증번호" class="inputs">
+            <button type="button" onclick="verifyCode()" class="checkIdBtn">인증확인</button>
+        </div>
+
+        <button type="submit" class="btn btn-primary">회원가입</button>
+        <a href="/board/list/qna">리스트 페이지로 이동</a>
+    </form>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="/js/OAuth2Check.js"></script>
+    <link rel="stylesheet" type="text/css" href="/css/register.css">
+</main>
+</html>

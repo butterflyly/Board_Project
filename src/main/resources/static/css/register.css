@@ -57,3 +57,7 @@
 .error-input {
     border-color: #dc3545;
 }
+
+#div_invisible {
+   display: none; /* 요소를 숨김 */
+}

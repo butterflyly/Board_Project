@@ -20,11 +20,10 @@ import java.io.PrintWriter;
 import java.security.Principal;
 
 @Controller
-@RequiredArgsConstructor
 @Slf4j
 @RequestMapping("/message")
 @PreAuthorize("isAuthenticated()")
-
+@RequiredArgsConstructor
 public class MessageController {
 
     private final MessageService messageService;
