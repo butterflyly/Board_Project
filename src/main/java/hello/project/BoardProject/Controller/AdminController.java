@@ -34,7 +34,7 @@ import java.util.*;
 @RequiredArgsConstructor
 @Controller
 @RequestMapping("/admin")
-@PreAuthorize("hasRole('ROLE_ADMIN')")
+@PreAuthorize("hasRole('ROLE_ADMIN')") // 해당 컨트롤러는 전부 관리자 권한만 들어올 수 있게끔 
 @Slf4j
 public class AdminController {
 
