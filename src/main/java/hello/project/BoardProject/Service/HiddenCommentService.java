@@ -20,6 +20,8 @@ import java.util.List;
 public class HiddenCommentService {
 
     private final HiddenCommentRepository hiddenCommentRepository;
+
+    // 삭제된 게시글의 댓글 페이징 처리
     public Page<CommentResponseDTO> findAll(int page, Long board_Id) {
 
         Pageable pageable;

@@ -20,6 +20,8 @@ import java.util.Set;
 
 @Entity
 @Getter
+// 기본 생성자(매개변수가 없는 생성자)를 생성
+// 주로 JPA 같은 ORM 프레임워크에서 엔티티를 생성할 때 필요하거나, 빈 객체를 생성해야 할 때 사용
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SQLDelete(sql = "UPDATE board SET deleted = true WHERE id = ?")
 @Where(clause = "deleted = false")
@@ -48,16 +50,12 @@ public class Board  {
         this.deleteCreateDate = localDateTime;
     }
 
-    public void Deleted_False()
-    {
-        this.deleted = false;
-        this.deleteCreateDate = null;
-    }
 
     private Long delete_user_id;
     private String delete_user_nickname;
     private String hard_delete_user_nickname;
 
+    // 유저 삭제시 메소드
     public void UserDelete(Long id,String nickname)
     {
         delete_user_id = id;
@@ -65,6 +63,7 @@ public class Board  {
         users = null;
     }
 
+    // 유저 하드 삭제시
     public void User_Hard_Delete(String nickname) {
         delete_user_id = null;
         hard_delete_user_nickname = nickname;
@@ -73,6 +72,7 @@ public class Board  {
 
     }
 
+    // 유저 복원
     public void UserReStore(Users user)
     {
         delete_user_id = null;
@@ -86,6 +86,7 @@ public class Board  {
     @ManyToOne
     private Users users;
 
+    // 게시글 수정
     public void BoardUpdate(String title,String content,boolean fix)
     {
         this.title = title;
@@ -94,6 +95,7 @@ public class Board  {
         modifyDate = LocalDateTime.now();
     }
 
+    // 삭제 유저 수정 시
     public void DeleteUserInfo(String nickname)
     {
         this.delete_user_nickname = nickname;

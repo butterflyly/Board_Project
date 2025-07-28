@@ -33,15 +33,4 @@ public class BoardRequestDTO {
                 build();
     }
 
-    public Board ModifytoEntity()
-    {
-        return Board.builder().id(id).
-                title(title).
-                content(content).
-                createDate(createDate).modifyDate(LocalDateTime.now()).
-                users(users).
-                build();
-    }
-
-
 }

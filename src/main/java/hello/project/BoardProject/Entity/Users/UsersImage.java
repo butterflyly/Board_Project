@@ -13,6 +13,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Entity
 @Table(name = "image")
+/*
+ 유저 이미지 엔티티
+ */
 public class UsersImage {
 
     @Id

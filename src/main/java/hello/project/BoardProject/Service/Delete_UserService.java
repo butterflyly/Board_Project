@@ -38,6 +38,9 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 @Slf4j
+/*
+ 소프트 삭제 유저 서비스 로직
+ */
 public class Delete_UserService {
 
     private final DeleteUserRepository deleteUserRepository;
@@ -50,6 +53,7 @@ public class Delete_UserService {
     private final ImageRepository imageRepository;
 
 
+    // 유저 리스트 페이징 데이터 리턴
     public Page<UserResponseDTO> UserList(int page)
     {
         Pageable pageable;
@@ -74,6 +78,7 @@ public class Delete_UserService {
         }
     }
 
+    // 상세 유저 데이터 조회
     public UserResponseDTO getUserDTO(Long userId)
     {
         Optional<Users> users = this.deleteUserRepository.findById(userId);
@@ -89,6 +94,7 @@ public class Delete_UserService {
     }
 
 
+    // 유저 아이디 중복체크
     public boolean checkUsername(String username)
     {
         if(deleteUserRepository.existsByUsername(username) > 0)
@@ -101,6 +107,7 @@ public class Delete_UserService {
         }
     }
 
+    // 유저 닉네임 중복체크
     public boolean checkNickname(String nickname) {
         if(deleteUserRepository.existsByNickname(nickname) > 0)
         {
@@ -112,6 +119,8 @@ public class Delete_UserService {
         }
     }
 
+
+    // 유저 이메일 중복체크
     public boolean checkEmail(String email)
     {
         if(deleteUserRepository.existsByEmail(email) > 0)
@@ -124,6 +133,8 @@ public class Delete_UserService {
         }
     }
 
+
+    // 최근 작성한 댓글 5개 가져오기
     public List<CommentResponseDTO> getCommentTop5LatestByUser(UserResponseDTO userResponseDTO) {
         Users users = deleteUserRepository.findByusername(userResponseDTO.
                 getUsername()).orElseThrow(() -> new IllegalArgumentException("코멘트를 단 유저가 없음"));
@@ -136,6 +147,7 @@ public class Delete_UserService {
     }
 
 
+    // 유저가 작성한 게시글 페이징 데이터 가져오기
     public Page<BoardResponseDTO> getPersonalBoardList(int page,String username,int category)
     {
         List<Sort.Order> sorts = new ArrayList<>();
@@ -148,6 +160,7 @@ public class Delete_UserService {
         return boardResponseDtos;
     }
 
+    // 유저가 작성한 댓글 페이징 데이터 가져오기
     public Page<CommentResponseDTO> getPersonalCommentList(int page, String username) {
         List<Sort.Order> sorts = new ArrayList<>();
         sorts.add(Sort.Order.desc("create_Date"));
@@ -162,6 +175,7 @@ public class Delete_UserService {
 
     }
 
+    // 유저 복원하기
     public void User_ReStore(Long id) {
         UserResponseDTO userResponseDTO = getUserDTO(id);
         Users users = getUser(userResponseDTO.getUsername());
@@ -208,6 +222,7 @@ public class Delete_UserService {
 
     }
 
+    // 소셜유저 완전탈퇴
     public void OAuth2Delete(String username)
     {
         Optional<Users> usersOptional = deleteUserRepository.findByusernameOAuth2(username);
@@ -301,7 +316,7 @@ public class Delete_UserService {
         userRepository.deleteById(users.getId());
     }
 
-    // 오류
+    // 유저 하드삭제
     public void Hard_Delete(Long id)
     {
         UserResponseDTO userResponseDTO = getUserDTO(id);
@@ -377,6 +392,7 @@ public class Delete_UserService {
     }
 
 
+    // 유저 데이터 리스트 로직
     public List<UserResponseDTO> getList() {
 
        List<Users> usersList = deleteUserRepository.findAll();
@@ -385,6 +401,7 @@ public class Delete_UserService {
         return userResponseDTOList;
     }
 
+    // 소프트 삭제(회원탈퇴) 한 유저 차트
     public ChartData DeleteChart() {
 
         LocalDateTime now = LocalDateTime.now();
@@ -419,6 +436,7 @@ public class Delete_UserService {
         return chartData;
     }
 
+    // 회원 수정 시 외래키(였던) 엔티티들 수정
     public void deleteUserInfo(UserResponseDTO userResponseDTO,String nickname) {
 
         Users users = deleteUserRepository.findByusername(userResponseDTO.getUsername()).orElseThrow();

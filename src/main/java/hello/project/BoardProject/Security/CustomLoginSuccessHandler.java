@@ -78,7 +78,7 @@ public class CustomLoginSuccessHandler implements AuthenticationSuccessHandler {
                     .encode(StandardCharsets.UTF_8)
                     .toUriString();
 
-            new SecurityContextLogoutHandler().logout(request, response, null);
+            new SecurityContextLogoutHandler().logout(request, response, null); // 유저가 GUEST 인 경우 로그인은 시키지 않기
 
             redirectStrategy.sendRedirect(request, response, redirectURL);
         }

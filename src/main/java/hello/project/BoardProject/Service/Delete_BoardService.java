@@ -38,6 +38,11 @@ public class Delete_BoardService {
     private final HiddenCommentRepository hiddenCommentRepository;
     private final BoardImageRepository boardImageRepository;
 
+    /*
+     이하 게시글은 전부 소프트 삭제된 게시글 데이터임
+     */
+
+    // 게시글 조회
     public BoardResponseDTO detail(Long id)  {
 
         Optional<Board> board = deleteBoardRepository.findById(id);
@@ -51,6 +56,7 @@ public class Delete_BoardService {
         }
     }
 
+    // 게시글 엔티티 조회
     public Board getBoard(Long id)
     {
         Optional<Board> board = deleteBoardRepository.findById(id);
@@ -79,6 +85,7 @@ public class Delete_BoardService {
         }
     }
 
+    // 다음글 로직
     public Long getNextPageNumber(BoardResponseDTO boardResponseDTO)
     {
         Optional<Board> nextBoard =
@@ -180,8 +187,7 @@ public class Delete_BoardService {
         return null; // 조건문에 안들어가는 경우는 당연히 NULL
     }
 
-
-
+    // 게시글 리스트 페이징 데이터
     public Page<BoardResponseDTO> getPage(int page, String sort, int categoryName,String search ,String kw)
     {
         Pageable pageable;

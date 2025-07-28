@@ -70,8 +70,8 @@ public class PrincipalOAuth2UserService extends DefaultOAuth2UserService {
         Users findMember = userRepository.findByusername(loginId).orElse(null);
         Users member;
 
+        // USER_ROLE 을 GUEST 로 설정하고 회원가입
         if (findMember == null) {
-
             member = Users.builder()
                     .username(loginId)
                     .email(email)
@@ -82,6 +82,7 @@ public class PrincipalOAuth2UserService extends DefaultOAuth2UserService {
                     .build();
             userRepository.save(member);
 
+            // 기본이미지 넣기
             UsersImage image = UsersImage.builder()
                     .url("/profileImages/anonymous.png")
                     .users(member)

@@ -41,6 +41,7 @@ public class CustomLogoutSuccessHandler implements LogoutSuccessHandler {
 
         Optional<OAuth2AccesTokenData> auth2AccesTokenData = oAuth2AccesTokenDataRepository.findByUsername(users.getUsername());
 
+        // 엑세스 토큰 삭제
         if(!auth2AccesTokenData.isEmpty())
         {
             OAuth2AccesTokenData oAuth2AccesTokenData = auth2AccesTokenData.get();
@@ -51,8 +52,6 @@ public class CustomLogoutSuccessHandler implements LogoutSuccessHandler {
         String referer = request.getHeader("Referer");
         log.info("referer :" + referer);
         // 이전 페이지가 없거나, 로컬 호스트가 아니면 기본 URL로 이동
-
-
 
         if (referer == null || !referer.contains("localhost") || !referer.startsWith("http://")) {
             log.info("로그아웃 에러");

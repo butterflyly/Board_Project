@@ -12,6 +12,9 @@ import java.util.Date;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+/*
+ 유저가 게시글을 읽었는지 저장하는 클래스
+ */
 public class BoardRead {
 
     @Id

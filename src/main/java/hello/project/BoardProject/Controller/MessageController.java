@@ -24,6 +24,9 @@ import java.security.Principal;
 @RequestMapping("/message")
 @PreAuthorize("isAuthenticated()")
 @RequiredArgsConstructor
+/*
+  유저간 메시지 관리 컨트롤러
+ */
 public class MessageController {
 
     private final MessageService messageService;
@@ -31,7 +34,6 @@ public class MessageController {
 
     // 메세지 송신
     @GetMapping("/send")
-    @PreAuthorize("isAuthenticated()")
     public String send(Model model,Principal principal)
     {
         MessageForm messageForm = new MessageForm();
@@ -41,8 +43,8 @@ public class MessageController {
         return "message/send";
     }
 
+    // 메세지 송신
     @PostMapping("/send")
-    @PreAuthorize("isAuthenticated()")
     public String send(Principal principal,
             @Valid @ModelAttribute MessageForm messageForm,
                        BindingResult bindingResult, HttpServletResponse response) {
@@ -55,10 +57,12 @@ public class MessageController {
         UserResponseDTO send_user = userService.getUserDTO(principal.getName()); // 송신 유저
         UserResponseDTO receiver_user = userService.getUserNicknameDTO(messageForm.getReceiverNickname()); // 수신자 유저
 
+        // 수신자 유저가 존재하지 않는 경우(잘못된 닉네임 입력)
         if(receiver_user == null)
         {
             alertAndClose(response,"수신자가 존재하지 않습니다.");
         }
+        // 송신자가 자기 닉네임으로 메세지를 보내길 시도하는 경우
         else if (send_user.getId() == receiver_user.getId()) {
             alertAndClose(response,"송신자와 수신자가 같습니다.");
         }

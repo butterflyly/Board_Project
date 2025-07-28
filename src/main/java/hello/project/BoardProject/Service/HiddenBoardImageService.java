@@ -9,6 +9,9 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @Service
+/*
+ 삭제된 게시글의 이미지 서비스 로직
+ */
 public class HiddenBoardImageService {
 
     private final BoardImageRepository boardImageRepository;

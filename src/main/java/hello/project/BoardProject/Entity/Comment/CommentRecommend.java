@@ -14,6 +14,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 @Table(name = "comment_recommend")
+/*
+ 댓글 추천 엔티티
+ */
 public class CommentRecommend {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)

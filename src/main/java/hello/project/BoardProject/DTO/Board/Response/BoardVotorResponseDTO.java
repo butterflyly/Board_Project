@@ -11,6 +11,9 @@ import java.time.LocalDateTime;
 
 @Getter
 @NoArgsConstructor
+/*
+  게시글 추천 RESPONSE DTO
+ */
 public class BoardVotorResponseDTO {
 
     private Long id;

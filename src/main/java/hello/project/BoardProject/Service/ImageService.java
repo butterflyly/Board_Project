@@ -27,6 +27,7 @@ public class ImageService {
     @Value("${file.profileImagePath}")
     private String uploadFolder;
 
+    // 이미지 업로드
     public void upload(ImageUploadDTO imageUploadDTO, String email) {
         Users users = userRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("이메일이 존재하지 않습니다."));
         UsersImage image = imageRepository.findByUsers(users);
@@ -73,6 +74,7 @@ public class ImageService {
     }
 
 
+    // 이미지 복원
     public void ImageReStore(String email)
     {
         Users users = userRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("이메일이 존재하지 않습니다."));
@@ -85,6 +87,7 @@ public class ImageService {
         imageRepository.save(image2);
     }
 
+    // 이미지 찾기
     public ImageResponseDTO findImage(String email) {
         Users users = userRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("이메일이 존재하지 않습니다."));
         UsersImage image = imageRepository.findByUsers(users);

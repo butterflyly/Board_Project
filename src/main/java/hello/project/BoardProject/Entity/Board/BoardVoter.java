@@ -16,6 +16,9 @@ import java.util.List;
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
+/*
+ 게시글 추천 데이터를 저장하는 엔티티
+ */
 public class BoardVoter {
 
     @Id

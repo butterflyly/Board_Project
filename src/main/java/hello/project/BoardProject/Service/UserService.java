@@ -170,6 +170,9 @@ public class UserService {
         }
     }
 
+    /*
+     유저 데이터 가져오기
+     */
     public UserResponseDTO getUserDTO(Long userId)
     {
         Optional<Users> users = this.userRepository.findById(userId);
@@ -184,6 +187,9 @@ public class UserService {
         }
     }
 
+    /*
+     유저 데이터 닉네임으로 가져오기
+     */
     public UserResponseDTO getUserNicknameDTO(String nickname)
     {
         Users users = this.userRepository.findByNickname(nickname);
@@ -198,6 +204,9 @@ public class UserService {
         }
     }
 
+    /*
+     유저 데이터 이메일로 가져오기
+     */
     public Users getUserEmail(String email)
     {
         Optional<Users> users = this.userRepository.findByEmail(email);
@@ -212,6 +221,9 @@ public class UserService {
         }
     }
 
+    /*
+     유저 데이터 이메일로 가져오기
+     */
     public UserResponseDTO getUserEmailDTO(String email)
     {
         Optional<Users> users = this.userRepository.findByEmail(email);
@@ -271,6 +283,7 @@ public class UserService {
         this.userRepository.save(users);
     }
 
+    // 유저 소프트 삭제
     public void UserDelete(String username)
     {
         Users users = getUser(username);
@@ -394,6 +407,7 @@ public class UserService {
     }
 
 
+    // 이메일 전송
     public void send_find_Password_Email(String email) {
         // 테스트를 위해 @test.com인 이메일은 발송하지 않음
         if (email.endsWith("@test.com"))
@@ -514,6 +528,7 @@ public class UserService {
     }
 
 
+    // 네이버 탈퇴
    public void NaverDelete(String accessToken)
    {
 
@@ -597,6 +612,7 @@ public class UserService {
     }
 
 
+    // 소셜 회원가입
     public void OAuth2Register(UserRegisterForm userRegisterForm) {
         UserResponseDTO userResponseDTO = getUserEmailDTO(userRegisterForm.getEmail());
 

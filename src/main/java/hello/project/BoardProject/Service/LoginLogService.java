@@ -21,6 +21,7 @@ public class LoginLogService {
     private final UserRepository userRepository;
 
 
+    // 로그인 로그 저장
     public void loginLogSave(String username)
     {
         Users users = userRepository.findByusername(username).orElseThrow();
@@ -31,6 +32,7 @@ public class LoginLogService {
         loginLogRepository.save(loginLog);
     }
 
+    // 로그인 로그 차트
     public ChartData LoginLogChartData() {
 
         LocalDateTime now = LocalDateTime.now();

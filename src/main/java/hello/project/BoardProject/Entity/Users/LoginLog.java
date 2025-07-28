@@ -13,6 +13,9 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
+/*
+ 로그인 로그 엔티티
+ */
 public class LoginLog {
 
     @Id
@@ -20,6 +23,5 @@ public class LoginLog {
     private Long id;
 
     private LocalDateTime loginlogTime;
-    private String ip;
     private Long user_id;
 }

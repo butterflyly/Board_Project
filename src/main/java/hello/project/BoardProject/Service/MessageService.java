@@ -35,6 +35,9 @@ public class MessageService {
 
 
 
+    /*
+     메시지 송신후 데이터 저장
+     */
     public void sendMessage(UserResponseDTO sender,UserResponseDTO recevier ,
                             String title, String content) {
 
@@ -49,6 +52,7 @@ public class MessageService {
         messageRepository.save(message);
     }
 
+    // 송신자가 보낸 메세지 데이터 페이징으로 받기
     public Page<MessageResponseDTO> SendList(UserResponseDTO userResponseDTO, int page)
     {
         Users users = userRepository.findByusername(userResponseDTO.getUsername()).orElseThrow();
@@ -61,6 +65,7 @@ public class MessageService {
         return messageResponseDTOPage;
     }
 
+    // 메세지 데이터 DTO로 가져오기
     public MessageResponseDTO getMessageDTO(Long id) {
 
         Optional<Message> message = messageRepository.findById(id);
@@ -75,6 +80,7 @@ public class MessageService {
         }
     }
 
+    // 엔티티로 메세지 데이터를 받아야 하는 경우
     public Message getMessage(Long id)
     {
         Optional<Message> message = messageRepository.findById(id);
@@ -88,6 +94,8 @@ public class MessageService {
         }
     }
 
+
+    // 송신자의 메세지 삭제
     @Transactional
     public void sendDelete(Long id, String username) {
 
@@ -128,6 +136,7 @@ public class MessageService {
         }
     }
 
+    // 수신자의 메세지 페이징 처리로 받기
     public Page<MessageResponseDTO> RecevieList(UserResponseDTO userResponseDTO,int page) {
         Users users = userRepository.findByusername(userResponseDTO.getUsername()).orElseThrow();
 
@@ -141,6 +150,7 @@ public class MessageService {
         return messageResponseDTOPage;
     }
 
+    // 수신자가 메세지를 삭제
     public void ReceiveDelete(Long id, String username) {
 
         Message message = getMessage(id);
@@ -178,18 +188,7 @@ public class MessageService {
             }
         }
 
-
     }
 
-    public static void alertAndClose(HttpServletResponse response, String msg) {
-        try {
-            response.setContentType("text/html; charset=utf-8");
-            PrintWriter w = response.getWriter();
-            w.write("<script>alert('"+msg+"');history.go(-1);</script>");
-            w.flush();
-            w.close();
-        } catch(Exception e) {
-            e.printStackTrace();
-        }
-    }
+
 }

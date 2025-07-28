@@ -13,6 +13,9 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
+/*
+ 게시글 조회가 얼마나 이루어졌는지 저장하는 엔티티
+ */
 public class Board_Views {
 
     @Id

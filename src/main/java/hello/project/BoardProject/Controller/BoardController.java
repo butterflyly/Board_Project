@@ -74,7 +74,7 @@ public class BoardController {
         boardCreateForm.setNickname(userResponseDTO.getNickname());
 
         model.addAttribute("boardName",category); // 현재 작성하는 게시글 카테고리를 확인하기 위함
-        model.addAttribute("CategoryName",CategoryName); // @PathVariable 변수 지정 위의 변수와 통일할 수 있을텐데 쉬운길을 선택함
+        model.addAttribute("CategoryName",CategoryName);
         model.addAttribute("boardCreateForm",boardCreateForm);
         return "board/write";
     }
@@ -219,7 +219,6 @@ public class BoardController {
                             BoardSearchCondition boardSearchCondition
             )
     {
-
         int category = switch (CategoryName) {
             case "qna" -> BoardCategory.QNA.getStatus();
             case "free" -> BoardCategory.FREE.getStatus();
@@ -229,8 +228,6 @@ public class BoardController {
 
         boardSearchCondition.setType(type); // 검색 타입 주입
         String search  = boardSearchCondition.getType();
-
-        log.info("SEARCH : " + search);
 
 
         model.addAttribute("search",search); // 검색타입
@@ -246,7 +243,7 @@ public class BoardController {
 
         model.addAttribute("paging", paging);
 
-        List<Long> ReadBoardId;
+        List<Long> ReadBoardId; // 읽은 게시글 아이디값 변수 리스트 선언
 
         // 사용자별 읽음 여부 테이블 조회
         if (principal != null) {
@@ -377,6 +374,7 @@ public class BoardController {
     }
 
 
+    // 게시글 소프트 삭제
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/delete/{id}")
     public String BoardDelete(@PathVariable Long id,Principal principal,HttpServletResponse httpServletResponse)

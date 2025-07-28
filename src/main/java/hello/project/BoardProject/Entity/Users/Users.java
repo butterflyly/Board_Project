@@ -24,6 +24,9 @@ import java.util.List;
 @Table(name = "users")
 @SQLDelete(sql = "UPDATE users SET user_deleted = true WHERE user_id = ?")
 @Where(clause = "user_deleted = false")
+/*
+  유저 엔티티
+ */
 public class Users {
 
 

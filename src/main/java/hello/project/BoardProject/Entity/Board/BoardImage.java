@@ -9,6 +9,9 @@ import lombok.*;
 @AllArgsConstructor
 @Entity
 @Table(name = "boardImage")
+/*
+ 게시글 이미지 저장하는 엔티티
+ */
 public class BoardImage {
 
     @Id

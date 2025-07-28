@@ -11,6 +11,9 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
+/*
+ 메세지 엔티티
+ */
 public class Message {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

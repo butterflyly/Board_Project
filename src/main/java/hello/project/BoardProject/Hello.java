@@ -25,16 +25,7 @@ public class Hello {
     @GetMapping("/")
     public String hello()
     {
-        log.info("Host :" + redisProperties.getHost());
-        log.info("Port : " + redisProperties.getPort());
-
         return "redirect:/board/list/qna";
-    }
-
-    @GetMapping("/test")
-    public String test()
-    {
-        return "test";
     }
 
     @GetMapping("/upload")

@@ -11,6 +11,7 @@ public class GoogleUserDetails implements OAuth2UserInfo {
 
     private Map<String, Object> attributes;
 
+
     @Override
     public String getProvider() {
         return "google";

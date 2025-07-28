@@ -14,6 +14,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 @Table(name = "comment_not_recommend")
+/*
+ 댓글 비추천 엔티티
+ */
 public class CommentNotRecommend {
 
     @Id

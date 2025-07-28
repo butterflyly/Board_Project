@@ -7,6 +7,9 @@ import lombok.Getter;
 import java.time.LocalDateTime;
 
 @Getter
+/*
+ 유저 데이터 읽기(RESPONSE DTO)
+ */
 public class UserResponseDTO {
 
     private Long id;

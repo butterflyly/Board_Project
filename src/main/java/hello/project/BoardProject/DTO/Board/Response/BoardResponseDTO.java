@@ -12,6 +12,9 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Getter
+/*
+  게시글 RESPONSE DTO
+ */
 public class BoardResponseDTO {
 
     private Long id;

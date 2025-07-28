@@ -64,27 +64,24 @@ public class CommentController {
                               @RequestParam(value = "reply-comment-file", required = false) MultipartFile file,
                               Principal principal) {
 
-
         // 부모 댓글값 가져오기
         CommentResponseDTO commentResponseDTOParent = commentService.getCommentDTO(commentForm.getParentId());
 
         // 부모댓글이 없으면 자식댓글이 나올 수 없으므로 false
         if (commentResponseDTOParent == null) {
-            return "Search_Fail";
+            return "Search_Fail"; // JS 에서 실패
         }
 
         // 게시글 가져오기
         BoardResponseDTO boardResponseDto = boardService.detail(commentResponseDTOParent.getBoard().getId());
 
-        // 게시글 작성자 유저아이디 변수 가져오기
+        // 게시글 작성자 유저아이디 변수 가져오기(게시글 작성자는 )
         String boardWriterUsername = boardResponseDto.getUsername();
 
+        // 현재 접속한 유저 데이터 가져오기
         UserResponseDTO user = userService.getUserDTO(principal.getName());
 
-        log.info("commentId :" +commentForm.getCommentId());
-        log.info("parentId :"+commentForm.getParentId());
-
-        //
+        // 댓글 OR 대댓글의 비밀댓글 변수
         int booleanCheck = commentService.childListCheck(commentResponseDTOParent);
 
 
@@ -160,6 +157,7 @@ public class CommentController {
 
         UserResponseDTO userResponseDTO = userService.getUserDTO(principal.getName());
 
+        // 댓글 작성자가 소프트 OR 하드삭제가 되지 않은 경우
         if(commentForm.getCommentUsers() != null)
         {
             if(!(userResponseDTO.getId().equals(commentForm.getCommentUsers())))
@@ -170,14 +168,16 @@ public class CommentController {
                 }
             }
         }
-        // 댓글 작성 유저가 없는 경우
+        // 댓글 작성자가 소프트 OR 하드삭제된 경우
         else {
+            // 관리자가 아닌경우 수정이 안됨
             if(!(userResponseDTO.getUsername().equals("admin")))
             {
                 alertAndClose(httpServletResponse,"수정 권한이 없습니다");
             }
         }
 
+        // 댓글이 없는 경우
         if(commentForm.getCommentId() == null)
         {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "댓글이 없습니다.");
@@ -247,24 +247,26 @@ public class CommentController {
     {
         UserResponseDTO userResponseDTO = userService.getUserDTO(principal.getName());
 
-        if (userResponseDTO.getId() != userId) {
-
-            if(!Objects.equals(principal.getName(), "admin"))
-            {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "조회 권한이 없습니다.");
-            }
+        // 접속한 유저가 댓글 작성자가 아니고 관리자도 아닌경우
+        if (userResponseDTO.getId() != userId &&
+                !Objects.equals(principal.getName(), "admin")) {
 
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "조회 권한이 없습니다.");
         }
-
-        Page<CommentResponseDTO> paging = commentService.getPersonalCommentList(page, userResponseDTO.getUsername());
-        model.addAttribute("user", userResponseDTO);
-        model.addAttribute("paging", paging);
-        model.addAttribute("type","총 댓글 개수");
-        // 동일한 템플릿 사용 -> 총 답변수로 표기하기 위함
-        return "comment/personal_list";
+        // case 1. 접속한 유저가 댓글 작성자이자 관리자인 경우
+        // case 2. 접속한 유저가 댓글 작성자이지만 관리자는 아닌 경우
+        // case 3. 접속한 유저가 댓글 작성자는 아니지만 관리자인 경우
+        else {
+            Page<CommentResponseDTO> paging = commentService.getPersonalCommentList(page, userResponseDTO.getUsername());
+            model.addAttribute("user", userResponseDTO);
+            model.addAttribute("paging", paging);
+            model.addAttribute("type","총 댓글 개수");
+            // 동일한 템플릿 사용 -> 총 답변수로 표기하기 위함
+            return "comment/personal_list";
+        }
     }
 
+    // 댓글 추천
     @PostMapping("/{comment_Id}/recommend")
     public String recommend(@PathVariable("comment_Id") Long comment_Id,
                             Principal principal,HttpServletResponse httpServletResponse,Model model) {
@@ -275,6 +277,10 @@ public class CommentController {
         boolean Not_Recommend_check = commentService.not_voteUsers(commentResponseDTO,userResponseDTO);
 
 
+        /*
+          아래의 조건문을 서비스 코드로 이전하는게 좋아보임
+          (수정 이후 해당 주석은 삭제 예정)
+         */
         if(check) // 유저가 댓글 추천을 이미 한 경우
         {
             if(Not_Recommend_check) // 유저가 댓글을 이미 비추천한 경우(사실 없는 경우임)
@@ -282,13 +288,11 @@ public class CommentController {
                 // 어차피 비추천 했으므로 추천이 취소되어도 됨
                 commentService.cancelRecommend(comment_Id, principal.getName());
                 model.addAttribute("message","추천을 취소했어양");
-                log.info("댓글 추천 개수 :" + commentResponseDTO.getRecommends().size());
             }
             else { // 유저가 댓글을 비추천하지 않은 경우
                 //비추천을 한게 아니므로 추천을 취소할 수 있음
                 commentService.cancelRecommend(comment_Id, principal.getName());
                 model.addAttribute("message","추천을 취소했어양");
-                log.info("댓글 추천 개수 :" + commentResponseDTO.getRecommends().size());
             }
             model.addAttribute("searchUrl","/board/detail/"+commentResponseDTO.getBoard().getId());
             return "message";
@@ -297,14 +301,12 @@ public class CommentController {
             if(Not_Recommend_check) // 유저가 이미 비추천을 했음 => 추천을 할 수 없음
             {
                 model.addAttribute("message","비추천을 해서 추천할수 없어양");
-                log.info("댓글 추천 개수 :" + commentResponseDTO.getRecommends().size());
                 model.addAttribute("searchUrl","/board/detail/"+commentResponseDTO.getBoard().getId());
             }
             else { // 비추천을 안한 경우
                 // 추천을 할 수 있음
                 commentService.recommend(comment_Id, principal.getName());
                 model.addAttribute("message","추천했어양");
-                log.info("댓글 추천 개수 :" + commentResponseDTO.getRecommends().size());
                 model.addAttribute("searchUrl","/board/detail/"+commentResponseDTO.getBoard().getId());
             }
 
@@ -312,6 +314,7 @@ public class CommentController {
         }
     }
 
+    // 댓글 비추천
     @PostMapping("/{comment_Id}/notrecommend")
     public String Not_recommend(@PathVariable("comment_Id") Long comment_Id,
                                 Principal principal, HttpServletResponse httpServletResponse, Model model) {
@@ -328,13 +331,11 @@ public class CommentController {
                 // 어차피 추천 했으므로 비추천이 취소되어도 됨
                 commentService.not_cancelRecommend(comment_Id, principal.getName());
                 model.addAttribute("message","비추천을 취소했어양");
-                log.info("댓글 추천 개수 :" + commentResponseDTO.getRecommends().size());
             }
             else { // 유저가 댓글을 비추천하지 않은 경우
                 //비추천을 한게 아니므로 추천을 취소할 수 있음
                 commentService.not_cancelRecommend(comment_Id, principal.getName());
                 model.addAttribute("message","비추천을 취소했어양");
-                log.info("댓글 추천 개수 :" + commentResponseDTO.getRecommends().size());
             }
             model.addAttribute("searchUrl","/board/detail/"+commentResponseDTO.getBoard().getId());
             return "message";
@@ -343,14 +344,12 @@ public class CommentController {
             if(Recommend_check) // 유저가 이미 추천을 했음 => 비추천을 할 수 없음
             {
                 model.addAttribute("message","추천을 해서 비추천할 수 없어양");
-                log.info("댓글 추천 개수 :" + commentResponseDTO.getRecommends().size());
                 model.addAttribute("searchUrl","/board/detail/"+commentResponseDTO.getBoard().getId());
             }
             else { // 추천을 안한 경우
                 // 비추천을 할 수 있음
                 commentService.not_recommend(comment_Id, principal.getName());
                 model.addAttribute("message","비추천했어양");
-                log.info("댓글 추천 개수 :" + commentResponseDTO.getRecommends().size());
                 model.addAttribute("searchUrl","/board/detail/"+commentResponseDTO.getBoard().getId());
             }
             return "message";

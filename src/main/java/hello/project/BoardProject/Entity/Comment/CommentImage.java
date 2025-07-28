@@ -12,6 +12,9 @@ import lombok.*;
 @AllArgsConstructor
 @Entity
 @Table(name = "comment_image")
+/*
+ 댓글 이미지 엔티티
+ */
 public class CommentImage {
 
     @Id

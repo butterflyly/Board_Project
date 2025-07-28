@@ -11,10 +11,15 @@ import java.time.LocalDateTime;
 
 @Getter
 @Entity
-@EntityListeners(AuditingEntityListener.class)
+@EntityListeners(AuditingEntityListener.class) //시간에 대해서 자동으로 값을 넣어주는 기능
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+// 기능: 클래스의 모든 필드를 매개변수로 받는 생성자를 생성합니다.
+// 주로 의존성 주입이나 객체 생성 시 모든 필드를 초기화해야 할 때 사용
 @AllArgsConstructor
+/*
+ 게시글 비추천 데이터를 저장하는 엔티티
+ */
 public class BoardNotVoter {
 
     @Id
@@ -28,7 +33,7 @@ public class BoardNotVoter {
     @ManyToOne
     private Users notVoter;
 
-    @CreatedDate
+    @CreatedDate // 생성 시간 데이터 자동 주입
     private LocalDateTime createDate;
 
 

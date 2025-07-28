@@ -112,14 +112,13 @@ public class BoardService {
      */
     public BoardResponseDTO detail(Long id)  {
 
-        Optional<Board> board = boardRepository.findById(id);
+        Optional<Board> board = boardRepository.findById(id); // 게시글 데이터 가져오기
 
         if(board.isEmpty())
         {
             throw new DataNotFoundException("게시글이 없습니다.");
         }
         else {
-
             BoardResponseDTO boardResponseDTO = new BoardResponseDTO(board.get());
             return boardResponseDTO;
         }
@@ -141,7 +140,7 @@ public class BoardService {
     }
 
 
-    // 이전 다음글 로직
+    // 이전글 게시글 ID 가져오기
     public Long getPrePageNumber(BoardResponseDTO boardResponseDTO)
     {
         Optional<Board> preBoard = boardRepository.findPreBoardByCreateDate(boardResponseDTO.getCreateDate());
@@ -155,6 +154,7 @@ public class BoardService {
         }
     }
 
+    // 다음글 게시글 ID 가져오기
     public Long getNextPageNumber(BoardResponseDTO boardResponseDTO)
     {
         Optional<Board> nextBoard = boardRepository.findNextBoardByCreateDate(boardResponseDTO.getCreateDate());
@@ -318,6 +318,9 @@ public class BoardService {
     }
 
 
+    /*
+       게시글 리스트 조회 로직
+     */
     public Page<BoardResponseDTO> getPage(int page, String sort,
                                           int category, String search, String kw) {
 
@@ -563,6 +566,7 @@ public class BoardService {
         }
     }
 
+    // 게시글 추천 데이터 로직
     public List<BoardVotorResponseDTO> getBoardVoterList(BoardResponseDTO boardResponseDTO) {
 
         Board board = getBoard(boardResponseDTO.getId());
@@ -574,6 +578,7 @@ public class BoardService {
         return boardVotorResponseDTOS;
     }
 
+    // 게시글 비추천 데이터 로직
     public List<BoardNotVotorResponseDTO> getBoardNotVoterList(BoardResponseDTO boardResponseDTO) {
         Board board = getBoard(boardResponseDTO.getId());
 
@@ -585,6 +590,7 @@ public class BoardService {
     }
 
 
+    // 추천한 유저 boolean 값
     public boolean voteUsers(BoardResponseDTO boardResponseDto,UserResponseDTO userResponseDTO)
     {
         Board board = getBoard(boardResponseDto.getId());
@@ -603,6 +609,7 @@ public class BoardService {
         return boardVoterList.stream().anyMatch(v -> v.getVoter().equals(users));
     }
 
+    // 비추천한 유저 boolean 값
     public boolean notvoteUsers(BoardResponseDTO boardResponseDto,UserResponseDTO userResponseDTO)
     {
         Board board = getBoard(boardResponseDto.getId());
@@ -615,7 +622,6 @@ public class BoardService {
         {
             boardNotVoterList.removeIf(boardNotVoter -> boardNotVoter.getNotVoter() == null);
         }
-
 
        return boardNotVoterList.stream().anyMatch(v -> v.getNotVoter().equals(users));
 
@@ -779,6 +785,7 @@ public class BoardService {
     }
 
 
+    // 게시글 차트(게시글 개수로 사용)
     public ChartData BoardChart(int category) {
 
         LocalDateTime now = LocalDateTime.now();
@@ -811,6 +818,7 @@ public class BoardService {
 
     }
 
+    // 카테고리별 게시글 리스트 데이터 조회
     public List<BoardResponseDTO> BoardCategoryList(int category)
     {
         List<Board> boardList = boardRepository.findByCategory(category);
@@ -821,6 +829,7 @@ public class BoardService {
         return boardResponseDTOList;
     }
 
+    // 게시글 조회 데이터 생성
     public void ViewsData_ReStore(Long id,int category)
     {
         Board_Views boardViews = Board_Views.builder().
@@ -831,6 +840,7 @@ public class BoardService {
     }
 
 
+    // 유저가 읽은 게시글 ID값 데이터
     public List<Long> ReadBoardIdList(String username) {
 
         Users users = userRepository.findByusername(username).orElseThrow(() ->
@@ -848,6 +858,7 @@ public class BoardService {
         return Collections.singletonList(0L);
     }
 
+    // 조회된 게시글 조회수 차트
     public ChartData BoardViewChart(int category)
     {
         LocalDateTime now = LocalDateTime.now();
@@ -879,6 +890,7 @@ public class BoardService {
 
     }
 
+    // 추천한 유저 닉네임 리스트 String
     public List<String> Board_Voter_Nickname_list(BoardResponseDTO board) {
 
         List<BoardVotorResponseDTO> boardVotorResponseDTOS = getBoardVoterList(board);
@@ -900,6 +912,7 @@ public class BoardService {
         return board_voter_nickname_list;
     }
 
+    // 비추천한 닉네임 리스트 데이터
     public List<String> Board_Not_Voter_Nickname_list(BoardResponseDTO board) {
 
         List<BoardNotVotorResponseDTO> boardNotVotorResponseDTOList = getBoardNotVoterList(board);

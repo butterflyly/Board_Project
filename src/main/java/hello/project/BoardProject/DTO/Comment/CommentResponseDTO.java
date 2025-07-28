@@ -19,6 +19,9 @@ import java.util.Set;
 
 @Getter
 @NoArgsConstructor
+/*
+ 댓글 RESPONSE DTO (댓글 읽기)
+ */
 public class CommentResponseDTO {
 
     private Long id;

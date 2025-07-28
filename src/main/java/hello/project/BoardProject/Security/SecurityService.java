@@ -22,6 +22,9 @@ public class SecurityService implements UserDetailsService {
 
     private final UserRepository userRepository;
 
+    /*
+      일반 유저 로그인 로직
+     */
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Optional<Users> _Users = this.userRepository.findByusername(username);

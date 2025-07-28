@@ -13,6 +13,9 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @Setter
+/*
+   소셜 로그인 엑세스토큰 엔티티 데이터(추후 REDIS로 수정 후 코드 수정 및 삭제예정)
+ */
 public class OAuth2AccesTokenData {
 
     @Id

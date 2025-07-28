@@ -8,10 +8,12 @@ import lombok.Getter;
 import java.time.LocalDateTime;
 
 @Getter
+/*
+    게시글 VIEWS 엔티티 Response DTO 클래스
+ */
 public class Board_Views_ResponseDTO {
 
     private Long id;
-
     private int category;
     private Long boardId;
     private LocalDateTime viewsTime;

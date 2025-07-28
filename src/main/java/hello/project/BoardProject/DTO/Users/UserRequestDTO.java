@@ -9,6 +9,9 @@ import java.time.LocalDateTime;
 
 @Getter
 @Setter
+/*
+ 유저 회원가입 OR 수정 REQUEST DTO
+ */
 public class UserRequestDTO {
 
     private Long id;

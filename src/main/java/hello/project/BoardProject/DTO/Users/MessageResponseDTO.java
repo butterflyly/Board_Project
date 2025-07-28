@@ -11,6 +11,9 @@ import lombok.Getter;
 import java.time.LocalDateTime;
 
 @Getter
+/*
+  메세지 RESPONSE DTO
+ */
 public class MessageResponseDTO {
 
     private Long id;

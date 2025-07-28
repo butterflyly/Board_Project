@@ -11,6 +11,9 @@ import java.util.List;
 
 @Getter
 @Setter
+/*
+ 게시글 생성 Form
+ */
 public class BoardCreateForm {
 
     private Long id;

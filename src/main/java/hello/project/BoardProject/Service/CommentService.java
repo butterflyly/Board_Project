@@ -58,6 +58,7 @@ public class CommentService {
 
 
 
+    // 댓글 작성
     @Transactional
     public Long writeReply(UserResponseDTO userResponseDTO, Long boardId,
                            String content, boolean secret,MultipartFile image) {
@@ -158,8 +159,8 @@ public class CommentService {
     }
 
 
+    // 게시글 내의 댓글 페이징 데이터
     public Page<CommentResponseDTO> findAll(int page, BoardResponseDTO boardResponseDto, String sort) {
-
 
         Board board =
                 boardRepository.findById(boardResponseDto.getId()).
@@ -169,11 +170,13 @@ public class CommentService {
         Pageable pageable;
         Page<Comment> commentList;
 
+        // sort 가 생성시간 기준인 경우
         if(sort.equals("createDate"))
         {
             pageable = PageRequest.of(page, 10, Sort.by(Sort.Direction.DESC,  "createDate"));
             commentList = commentRepository.findAllByBoard(pageable, board);
         }
+        // sort가 추천 기준인 경우
         else {
             pageable = PageRequest.of(page, 10);
             commentList = commentRepository.findAllByBoardOrderByRecommends(board.getId(),pageable);
@@ -184,6 +187,7 @@ public class CommentService {
         return commentResponseDTOS;
     }
 
+    // 댓글 데이터 가져오기
     public CommentResponseDTO getCommentDTO(Long id) {
         Optional<Comment> comment = this.commentRepository.findById(id);
         if (comment.isPresent()) {
@@ -198,6 +202,7 @@ public class CommentService {
         }
     }
 
+    // 엔티티 댓글 데이터 가져오기
     public Comment getComment(Long id) {
         Optional<Comment> comment = this.commentRepository.findById(id);
         if (comment.isPresent()) {
@@ -211,6 +216,7 @@ public class CommentService {
         }
     }
 
+    // 댓글 수정
     @Transactional
     public void modify(CommentResponseDTO commentResponseDTO, String content, boolean secret, MultipartFile image) {
 
@@ -230,11 +236,9 @@ public class CommentService {
             // 수정 이미지가 있는데 기존 이미지가 있는 경우
             if(comment.getImage() != null)
             {
-                log.info("IF 문 동작");
                 ImageDelete(comment.getId());
             }
 
-            log.info("ELSE 동작함?");
 
             UUID uuid = UUID.randomUUID();  //  범용 고유 식별자(UUID)를 생성하는 코드
             String imageFileName = uuid + "_" + image.getOriginalFilename(); //  UUID와 파일의 원본 파일명을 연결하여 이미지 파일명을 생성하는 코드
@@ -243,13 +247,6 @@ public class CommentService {
 
             CommentImage imageCheck = commentImageRepository.findByComment_Id(comment.getId());
 
-            if(imageCheck != null)
-            {
-                log.info("이미지 있음");
-            }
-            else {
-                log.info("이미지 없음");
-            }
 
             try {
                 //   MultipartFile에서 제공하는 메서드 중에 하나로,
@@ -259,13 +256,6 @@ public class CommentService {
                 throw new RuntimeException(e);
             }
 
-            if(imageCheck != null)
-            {
-                log.info("이미지 있음");
-            }
-            else {
-                log.info("이미지 없음");
-            }
 
             CommentImage Image = CommentImage.builder()
                     .url("/commentImage/" + imageFileName)
@@ -276,6 +266,7 @@ public class CommentService {
         }
     }
 
+    // 댓글 삭제
     @Transactional
     public void deleteComment(Long commentId) {
         Comment comment = getComment(commentId);
@@ -308,6 +299,7 @@ public class CommentService {
     }
 
 
+    // 변수 데이터의 소프트삭제된 유저가 최근에 작성한 댓글 5개
     public List<CommentResponseDTO> getDeleteUserCommentTop5LatestByUser(UserResponseDTO userResponseDTO) {
         Users users = deleteUserRepository.findByusername(userResponseDTO.
                 getUsername()).get();
@@ -324,6 +316,7 @@ public class CommentService {
         return commentResponseDTOList;
     }
 
+    // 소프트 삭제된 유저가 작성한 댓글 개수
     public Long getDeleteUserCommentCount(UserResponseDTO userResponseDTO) {
         Users users = deleteUserRepository.findByusername(userResponseDTO.
                 getUsername()).get();
@@ -351,6 +344,7 @@ public class CommentService {
     }
 
 
+    // 댓글 삭제
     @Transactional
     public void delete(Long commentId) {
 

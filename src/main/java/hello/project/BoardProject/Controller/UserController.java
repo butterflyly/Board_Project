@@ -45,6 +45,9 @@ import static javax.security.auth.callback.ConfirmationCallback.OK;
 @RequiredArgsConstructor
 @RequestMapping("/users")
 @Slf4j
+/*
+ 유저 관리 컨트롤러
+ */
 public class UserController {
 
     private final UserService userService;
@@ -158,6 +161,7 @@ public class UserController {
     @GetMapping("/login")
     public String login(HttpServletRequest request,Principal principal) {
 
+        // 이미 로그인한 유저는 메인페이지로 리다이렉트
         if(principal != null)
         {
             return "redirect:/";
@@ -221,7 +225,9 @@ public class UserController {
         return "users/user_update";
     }
 
-
+    /*
+       유저 수정
+     */
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/info")
     public String user_update(@Valid UserModifyForm userModifyForm,
@@ -256,12 +262,17 @@ public class UserController {
                 bindingResult.reject("modify_Failed","중복된 닉네임입니다");
                 return "users/user_update";
             }
-            imageService.upload(imageUploadDTO,users.getEmail());
-            userService.NicknameUpdate(userModifyForm.getNickname(),users.getUsername());
-            return "redirect:/users/mypage";
+            else {
+                imageService.upload(imageUploadDTO,users.getEmail());
+                userService.NicknameUpdate(userModifyForm.getNickname(),users.getUsername());
+                return "redirect:/users/mypage";
+            }
         }
     }
 
+    /*
+     비밀번호 수정
+     */
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/pwchange")
     public String PWChange(@ModelAttribute("pwChangeForm") PWChangeForm pwChangeForm)
@@ -269,6 +280,9 @@ public class UserController {
         return "users/pw_change";
     }
 
+    /*
+     비밀번호 수정
+     */
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/pwchange")
     public String PWChange(@Valid @ModelAttribute("pwChangeForm")PWChangeForm pwChangeForm
@@ -296,6 +310,9 @@ public class UserController {
         return "redirect:/users/mypage";
     }
 
+    /*
+        회원 삭제 비밀번호 체크
+     */
     @GetMapping("/delete/checkPwdForm")
     @PreAuthorize("isAuthenticated()")
     public String DeletecheckPwdView(Principal principal,HttpSession session,Model model) {
@@ -309,6 +326,9 @@ public class UserController {
         return "users/delete_check_pwd";
     }
 
+    /*
+        회원 삭제 비밀번호 체크
+     */
     @PostMapping("/delete/checkPwdForm")
     @PreAuthorize("isAuthenticated()")
     public String DeletecheckPwd(@Valid PWCheckForm pwCheckForm,
@@ -351,6 +371,7 @@ public class UserController {
     }
 
 
+    // 아이디 찾기
     @PostMapping("/find-userId")
     public String findAccount(Model model, @RequestParam(value="email")
             String email,Principal principal,HttpServletResponse httpServletResponse) {
@@ -379,6 +400,7 @@ public class UserController {
         return "users/userId_find";
     }
 
+    // 비밀번호 찾기
     @GetMapping("/find-password")
     public String findPassword(Model model,Principal principal) {
 
@@ -392,7 +414,7 @@ public class UserController {
         return "users/password_find";
     }
 
-
+    // 비밀번호 찾기
     @PostMapping("/find-password")
     public String findPassword(Model model, @RequestParam(value="email") String email,
                  @RequestParam(value="username") String username,Principal principal,HttpServletResponse httpServletResponse) {
@@ -429,6 +451,7 @@ public class UserController {
         return "users/password_find";
     }
 
+    // 소셜로그인(구글) 회원탈퇴
     @PostMapping("/delete/OAuth2/google")
     public String Delete_OAuth2_Google(Principal principal,HttpSession httpSession)
     {
@@ -450,6 +473,7 @@ public class UserController {
         return "redirect:/";
     }
 
+    // 소셜로그인(네이버) 회원탈퇴 (구글이랑 메소드 합쳐도될거같음 추후 수정)
     @PostMapping("/delete/OAuth2/naver")
     public String Delete_OAuth2_Naver(Principal principal,HttpSession httpSession)
     {

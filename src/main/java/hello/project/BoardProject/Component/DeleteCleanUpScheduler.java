@@ -24,12 +24,16 @@ import java.util.List;
 @RequiredArgsConstructor
 @Component
 @Slf4j
+/*
+  소프트 삭제 데이터 or 특정 시간만 존재하는 데이터를 기간을 설정하여 HARD DELETE 시키는 클래스
+ */
 public class DeleteCleanUpScheduler {
 
     private final Delete_BoardService delete_boardService;
     private final Delete_UserService deleteUserService;
     private final OAuth2AccesTokenDataRepository oAuth2AccesTokenDataRepository;
 
+    // 엑세스 토큰 삭제 메소드
     @Scheduled(fixedRate = 600000)
     @Transactional
     public void accesTokenDelete()
@@ -51,7 +55,8 @@ public class DeleteCleanUpScheduler {
         }
     }
 
-    @Scheduled(cron = "0 0 0 * * *")
+    // 소프트 삭제 게시글 하드삭제
+    @Scheduled(cron = "0 0 0 * * *") // 자정에 동작
     @Transactional
     public void BoardDelete() {
         log.info("소프트 삭제 후 2개월 지난 게시글 삭제 스케줄러 동작");
@@ -70,6 +75,7 @@ public class DeleteCleanUpScheduler {
         }
     }
 
+    // 소프트 유저 리스트 하드삭제
     @Scheduled(cron = "0 0 0 * * *")
     @Transactional
     public void UserDelete()

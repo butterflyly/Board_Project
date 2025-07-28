@@ -31,6 +31,9 @@ import java.util.stream.Collectors;
 @Slf4j
 @PreAuthorize("hasRole('ROLE_ADMIN')")
 @RequestMapping("/admin/deleteBoard")
+/*
+  게시글 소프트 삭제 관리 컨트롤러
+ */
 public class Delete_BoardController {
 
     private final Delete_BoardService delete_boardService;
@@ -47,12 +50,20 @@ public class Delete_BoardController {
                               @RequestParam(defaultValue = "0") int page
             , @ModelAttribute CommentForm commentForm, Principal principal)
     {
-
+        // 소프트 삭제 게시글 데이터 가져오기
         BoardResponseDTO board = delete_boardService.detail(id);
+
+        // 소프트 삭제된 게시글의 댓글 데이터 가져오기
         Page<CommentResponseDTO> commentPaging = hiddenCommentService.findAll(page,board.getId());
 
+        // 소프트 삭제된 게시글의 이미지 데이터 가져오기
 
+        /*
+          엔티티를 컨트롤러에 선언하는게 아니라 DTO로 하면 좋음 추후 수정 예정(수정하면 주석 삭제예정)
+         */
         List<BoardImage> boardImages = hiddenBoardImageService.ImageList(board.getId());
+
+
         List<String> ImageUrls = boardImages.stream()
             .map(BoardImage::getUrl).collect(Collectors.toList());
 
@@ -66,15 +77,17 @@ public class Delete_BoardController {
         BoardResponseDTO predto = delete_boardService.getPrePage(board);
         BoardResponseDTO nextdto = delete_boardService.getNextPage(board);
 
-        // 원래는 PREDTO로 통일을 하고 HTML에서 하는 것이 코드 간결화에 더 도움되나
-        // 기존에 이렇게 사용하여 일단 이렇게 ㅠㅠ
+        // 원래는 PREDTO로 통일을 하고 HTML에서 하는 것이 코드 간결화에 더 도움될거라고 생각함
+        // 기존에 이렇게 사용하여 일단 이렇게 ㅠㅠ(수정하면 주석 삭제예정)
         model.addAttribute("predto",predto);
         model.addAttribute("nextdto",nextdto);
-
 
         return "admin/delete_board/delete_board_detail";
     }
 
+    /*
+      소프트 삭제 게시글 목록
+     */
     @GetMapping("/list/{CategoryName}")
     public String BoardList(@PathVariable String CategoryName, Model model
             , @RequestParam(value = "kw", defaultValue = "") String kw
@@ -93,7 +106,6 @@ public class Delete_BoardController {
         boardSearchCondition.setType(type);
         String search  = boardSearchCondition.getType();
 
-        log.info("SEARCH : " + search);
 
         model.addAttribute("search",search);
         model.addAttribute("boardName",category);
@@ -109,14 +121,14 @@ public class Delete_BoardController {
     }
 
     /*
-      게시글 완전삭제
+      게시글 HARD_DELETE
      */
     @GetMapping("/delete/{id}")
     public String Board_HardDelete(@PathVariable Long id)
     {
         BoardResponseDTO boardResponseDTO = delete_boardService.detail(id);
 
-        String categoryName =null;
+        String categoryName =null; // 리다이렉트할 때 카테고리 명으로 리다이렉트하게 변수 선언
         // 삭제 하기전에 리다이렉트로 사용할 변수 미리 가져오기
         switch (boardResponseDTO.getCategory())
         {
@@ -125,7 +137,7 @@ public class Delete_BoardController {
             case 2 -> categoryName = "bug";
         }
 
-        delete_boardService.Board_HardDelete(id);
+        delete_boardService.Board_HardDelete(id); // HARD_DELETE
         return "redirect:/admin/deleteBoard/list/"+categoryName;
     }
 }

@@ -80,8 +80,10 @@ public class OAuth2RegisterController {
         userService.OAuth2Register(userRegisterForm);
         UserResponseDTO userResponseDTO = userService.getUserEmailDTO(userRegisterForm.getEmail());
 
+        // 회원가입 완료 후 세션값 삭제
         httpSession.invalidate();
 
+        // 회원가입 완료 이후 로그인
         if(userResponseDTO.getProviders().equals("google"))
         {
             return "redirect:/oauth2/authorization/google";
@@ -91,6 +93,9 @@ public class OAuth2RegisterController {
         }
     }
 
+    /*
+     이메일 인증
+     */
     @PostMapping("/OAuth2/create/mail-auth")
     @ResponseBody
     public ResponseEntity<Void> MailAuth(UserRegisterForm userRegisterForm,
@@ -98,19 +103,23 @@ public class OAuth2RegisterController {
     {
         String email_check = (String) session.getAttribute("email");
 
+        // 소셜 로그인 이메일이랑 지정하려는 이메일이 같은 경우
         if(email_check.equals(userRegisterForm.getEmail()))
         {
             return ResponseEntity.status(HttpStatus.OK).build();
         }
 
+        // 작성하려는 이메일이 이미 다른회원이 사용하는 경우
         if(userService.checkEmail(userRegisterForm.getEmail())||
                 deleteUserService.checkEmail(userRegisterForm.getEmail()))
         {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
-
-        String AuthNumber = String.valueOf(userService.sendMail(userRegisterForm.getEmail()));
-        session.setAttribute("verificationCode", AuthNumber); // 세션에 전송된 인증번호를 저장.
-        return ResponseEntity.status(HttpStatus.OK).build();
+        // 이메일이 중복되지 않은 경우
+        else {
+            String AuthNumber = String.valueOf(userService.sendMail(userRegisterForm.getEmail()));
+            session.setAttribute("verificationCode", AuthNumber); // 세션에 전송된 인증번호를 저장.
+            return ResponseEntity.status(HttpStatus.OK).build();
+        }
     }
 }

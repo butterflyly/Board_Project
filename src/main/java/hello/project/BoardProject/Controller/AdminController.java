@@ -36,6 +36,9 @@ import java.util.*;
 @RequestMapping("/admin")
 @PreAuthorize("hasRole('ROLE_ADMIN')") // 해당 컨트롤러는 전부 관리자 권한만 들어올 수 있게끔 
 @Slf4j
+/*
+  관리자 페이지 컨트롤러
+ */
 public class AdminController {
 
     private final UserService userService;
@@ -58,7 +61,7 @@ public class AdminController {
     @GetMapping("/user_list")
     public String UserList(Model model,@RequestParam(defaultValue = "0") int page)
     {
-        Page<UserResponseDTO> users = userService.UserPageList(page);
+        Page<UserResponseDTO> users = userService.UserPageList(page); // 유저 리스트 DTO 가져오기
         model.addAttribute("userList",users);
         return "admin/admin_user_list";
     }
@@ -91,7 +94,7 @@ public class AdminController {
     }
 
 
-    // 유저 삭제
+    // 유저 삭제(소프트)
     @GetMapping("/user_delete/{userId}")
     public String UserDelete(@PathVariable Long userId)
     {
@@ -108,7 +111,7 @@ public class AdminController {
     @GetMapping("/user/info/{userId}")
     public String Admin_User_Modify(@PathVariable Long userId,Model model)
     {
-        UserResponseDTO userResponseDTO = userService.getUserDTO(userId);
+        UserResponseDTO userResponseDTO = userService.getUserDTO(userId); // 특정 유저 정보 가져오기
         UserModifyForm userModifyForm = new UserModifyForm();
         userModifyForm.setId(userId);
         userModifyForm.setNickname(userResponseDTO.getNickname());
