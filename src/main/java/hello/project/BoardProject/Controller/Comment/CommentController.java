@@ -1,13 +1,13 @@
-package hello.project.BoardProject.Controller;
+package hello.project.BoardProject.Controller.Comment;
 
 import hello.project.BoardProject.DTO.Board.Response.BoardResponseDTO;
 import hello.project.BoardProject.DTO.Comment.CommentResponseDTO;
 import hello.project.BoardProject.DTO.Users.UserResponseDTO;
 import hello.project.BoardProject.Form.CommentForm;
 import hello.project.BoardProject.Repository.Comment.CommentImageRepository;
-import hello.project.BoardProject.Service.BoardService;
-import hello.project.BoardProject.Service.CommentService;
-import hello.project.BoardProject.Service.UserService;
+import hello.project.BoardProject.Service.Board.BoardService;
+import hello.project.BoardProject.Service.Comment.CommentService;
+import hello.project.BoardProject.Service.Users.UserService;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

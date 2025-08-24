@@ -1,4 +1,4 @@
-package hello.project.BoardProject.Service;
+package hello.project.BoardProject.Service.Users;
 
 
 import hello.project.BoardProject.DTO.ImageUploadDTO;

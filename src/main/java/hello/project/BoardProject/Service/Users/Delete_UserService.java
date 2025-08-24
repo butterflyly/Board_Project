@@ -1,4 +1,4 @@
-package hello.project.BoardProject.Service;
+package hello.project.BoardProject.Service.Users;
 
 
 import hello.project.BoardProject.DTO.Board.Response.BoardResponseDTO;
@@ -6,15 +6,15 @@ import hello.project.BoardProject.DTO.ChartData;
 import hello.project.BoardProject.DTO.Comment.CommentResponseDTO;
 import hello.project.BoardProject.DTO.Users.UserResponseDTO;
 import hello.project.BoardProject.Entity.Board.Board;
-import hello.project.BoardProject.Entity.Board.BoardNotVoter;
 import hello.project.BoardProject.Entity.Board.BoardRead;
-import hello.project.BoardProject.Entity.Board.BoardVoter;
 import hello.project.BoardProject.Entity.Comment.Comment;
 import hello.project.BoardProject.Entity.Users.Message;
 import hello.project.BoardProject.Entity.Users.Users;
 import hello.project.BoardProject.Entity.Users.UsersImage;
 import hello.project.BoardProject.Error.DataNotFoundException;
-import hello.project.BoardProject.Repository.Board.*;
+import hello.project.BoardProject.Repository.Board.BoardReadRepository;
+import hello.project.BoardProject.Repository.Board.BoardRepository;
+import hello.project.BoardProject.Repository.Board.DeleteBoardRepository;
 import hello.project.BoardProject.Repository.Comment.CommentRepository;
 import hello.project.BoardProject.Repository.Users.DeleteUserRepository;
 import hello.project.BoardProject.Repository.Users.ImageRepository;
@@ -28,11 +28,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.awt.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
-import java.util.List;
 import java.util.stream.Collectors;
 
 @Service

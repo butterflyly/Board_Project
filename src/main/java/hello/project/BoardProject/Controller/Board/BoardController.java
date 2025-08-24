@@ -1,21 +1,17 @@
-package hello.project.BoardProject.Controller;
+package hello.project.BoardProject.Controller.Board;
 
 
 import hello.project.BoardProject.DTO.Board.BoardImageUploadDTO;
-import hello.project.BoardProject.DTO.Board.Response.BoardNotVotorResponseDTO;
 import hello.project.BoardProject.DTO.Board.Response.BoardResponseDTO;
-import hello.project.BoardProject.DTO.Board.Response.BoardVotorResponseDTO;
 import hello.project.BoardProject.DTO.Comment.CommentResponseDTO;
 import hello.project.BoardProject.DTO.Users.UserResponseDTO;
 import hello.project.BoardProject.Entity.Board.*;
 import hello.project.BoardProject.Form.Board.BoardCreateForm;
 import hello.project.BoardProject.Form.Board.BoardSearchCondition;
-import hello.project.BoardProject.Form.CommentForm;
-import hello.project.BoardProject.Form.UploadForm;
-import hello.project.BoardProject.Service.BoardService;
-import hello.project.BoardProject.Service.CommentService;
-import hello.project.BoardProject.Service.Delete_UserService;
-import hello.project.BoardProject.Service.UserService;
+import hello.project.BoardProject.Service.Board.BoardService;
+import hello.project.BoardProject.Service.Comment.CommentService;
+import hello.project.BoardProject.Service.Users.Delete_UserService;
+import hello.project.BoardProject.Service.Users.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -453,7 +449,6 @@ public class BoardController {
                                 @RequestParam(defaultValue = "0") int page)
     {
         UserResponseDTO userResponseDTO = userService.getUserDTO(userId);
-
 
         int category = switch (CategoryName) {
             case "qna" -> BoardCategory.QNA.getStatus();

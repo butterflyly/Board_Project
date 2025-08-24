@@ -1,7 +1,6 @@
-package hello.project.BoardProject.Service;
+package hello.project.BoardProject.Service.Users;
 
 import hello.project.BoardProject.DTO.ChartData;
-import hello.project.BoardProject.Entity.Board.Board_Views;
 import hello.project.BoardProject.Entity.Users.LoginLog;
 import hello.project.BoardProject.Entity.Users.Users;
 import hello.project.BoardProject.Repository.Users.LoginLogRepository;

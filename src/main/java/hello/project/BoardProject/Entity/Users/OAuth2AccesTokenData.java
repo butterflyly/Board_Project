@@ -26,9 +26,10 @@ public class OAuth2AccesTokenData {
 
     private String username;
 
-    private String token;
+    private String token; // 액세스 토큰
+    private String refreshToken;
 
-    @CreatedDate
-    private LocalDateTime createDate;
+    private LocalDateTime accessCreateDate;
+    private LocalDateTime refreshCreateDate;
 
 }

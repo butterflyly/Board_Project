@@ -1,6 +1,5 @@
-package hello.project.BoardProject.Service;
+package hello.project.BoardProject.Service.Users;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import hello.project.BoardProject.DTO.ChartData;
 import hello.project.BoardProject.DTO.Users.UserRequestDTO;
 import hello.project.BoardProject.DTO.Users.UserResponseDTO;
@@ -15,7 +14,6 @@ import hello.project.BoardProject.Entity.Users.UserRole;
 import hello.project.BoardProject.Entity.Users.Users;
 import hello.project.BoardProject.Entity.Users.UsersImage;
 import hello.project.BoardProject.Error.DataNotFoundException;
-import hello.project.BoardProject.Form.Users.UserRegisterForm;
 import hello.project.BoardProject.Repository.Board.BoardNotVoterRepository;
 import hello.project.BoardProject.Repository.Board.BoardRepository;
 import hello.project.BoardProject.Repository.Board.BoardVoterRepository;
@@ -28,7 +26,6 @@ import hello.project.BoardProject.Repository.Users.MessageRepository;
 import hello.project.BoardProject.Repository.Users.UserRepository;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -36,29 +33,17 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.http.*;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
-import org.springframework.web.client.RestClientException;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.UriComponentsBuilder;
 
-import java.awt.*;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
-import java.util.List;
 import java.util.stream.Collectors;
-
-import static java.net.Authenticator.RequestorType.SERVER;
 
 @RequiredArgsConstructor
 @Service
@@ -79,19 +64,6 @@ public class UserService {
     private final DeleteBoardRepository deleteBoardRepository;
 
 
-    @Value("${spring.security.oauth2.client.registration.google.client-id}")
-    private String clientId;
-
-    @Value("${spring.security.oauth2.client.registration.google.client-secret}")
-    private String clientSecret;
-
-    private static final String NAVER_URL = "https://nid.naver.com/oauth2.0/token";
-
-
-    @Value("${spring.security.oauth2.client.registration.naver.client-id}")
-    private String NAVER_CLIENT_ID;
-    @Value("${spring.security.oauth2.client.registration.naver.client-secret}")
-    private String NAVER_CLIENT_SECRET;
 
     @Value("${spring.mail.username}")
     private String ADMIN_ADDRESS;
@@ -297,8 +269,6 @@ public class UserService {
         List<CommentRecommend> commentRecommends = commentRecommendRepository.findByUser(users);
         List<CommentNotRecommend> commentNotRecommends = commentNotRecommendRepository.findByUser(users);
         List<Board> deleteBoardList = deleteBoardRepository.findAllByUsers(users.getId());
-
-        log.info("딜리트 보드 사이즈 :" + deleteBoardList.size());
 
 
         if(!boardList.isEmpty())
@@ -527,107 +497,5 @@ public class UserService {
         return chartData;
     }
 
-
-    // 네이버 탈퇴
-   public void NaverDelete(String accessToken)
-   {
-
-       RestTemplate restTemplate = new RestTemplate();
-
-       // oauth2 토큰이 만료 시 재 로그인
-       if (accessToken == null) {
-           log.info(" 엑세스 토큰이 없어염 ");
-           return;
-       }
-
-       String url = NAVER_URL +
-               "?service_provider=NAVER" +
-               "&grant_type=delete" +
-               "&client_id=" +
-               NAVER_CLIENT_ID +
-               "&client_secret=" +
-               NAVER_CLIENT_SECRET +
-               "&access_token=" +
-               accessToken;
-
-       UnlinkResponse response = restTemplate.getForObject(url, UnlinkResponse.class);
-
-       if (response != null && !"success".equalsIgnoreCase(response.getResult())) {
-           log.info("회원탈퇴가 제대로 되지않음");
-       }
-   }
-
-    /**
-     * 네이버 응답 데이터
-     */
-    @Getter
-    @RequiredArgsConstructor
-    public static class UnlinkResponse {
-        @JsonProperty("access_token")
-        private final String accessToken;
-        private final String result;
-    }
-
-
-    // 회원 탈퇴 로직 (예시)
-    public boolean revokeGoogleToken(String accessToken) {
-        RestTemplate restTemplate = new RestTemplate();
-
-        log.info("메소드 접근함?");
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-
-        MultiValueMap<String, String> map= new LinkedMultiValueMap<>();
-        map.add("token", accessToken);
-        map.add("client_id", clientId);
-        map.add("client_secret", clientSecret);
-
-
-        HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(map, headers);
-
-        try {
-
-            log.info("트라이문 들어옴?");
-
-            ResponseEntity<String> response = restTemplate.postForEntity("https://oauth2.googleapis.com/revoke",
-                    request, String.class);
-            if (response.getStatusCode().is2xxSuccessful()) {
-                // 연결 끊기 성공
-                log.info("성공함?");
-
-                return true;
-            } else {
-                log.info("실패함?");
-                // 연결 끊기 실패
-                return false;
-            }
-        } catch (Exception e) {
-            // 예외 발생 시 처리
-            log.info("오류로 들어옴?");
-
-            e.printStackTrace();
-            return false;
-        }
-    }
-
-
-    // 소셜 회원가입
-    public void OAuth2Register(UserRegisterForm userRegisterForm) {
-        UserResponseDTO userResponseDTO = getUserEmailDTO(userRegisterForm.getEmail());
-
-        UserRequestDTO userRequestDTO = new UserRequestDTO();
-        userRequestDTO.setId(userResponseDTO.getId());
-        userRequestDTO.setUsername(userResponseDTO.getUsername());
-        userRequestDTO.setNickname(userRegisterForm.getNickname());
-        userRequestDTO.setEmail(userRegisterForm.getEmail());
-        userRequestDTO.setUserRole(UserRole.USER);
-        userRequestDTO.setProviders(userResponseDTO.getProviders());
-        userRequestDTO.setProviderIds(userResponseDTO.getProviderIds());
-        userRequestDTO.setCreateDate(LocalDateTime.now());
-
-        Users users = userRequestDTO.ModifytoEntity();
-        userRepository.save(users);
-    }
 
 }

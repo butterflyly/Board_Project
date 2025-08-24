@@ -22,6 +22,7 @@ public class UserResponseDTO {
     private LocalDateTime user_delete_createDate;
     private String providers;
     private String providerIds;
+    private String refresh;
 
     public UserResponseDTO(Users users)
     {
@@ -35,6 +36,7 @@ public class UserResponseDTO {
         this.user_delete_createDate = users.getUser_delete_createDate();
         this.providers = users.getProviders();
         this.providerIds = users.getProviderIds();
+        this.refresh = users.getRefresh();
     }
 
 

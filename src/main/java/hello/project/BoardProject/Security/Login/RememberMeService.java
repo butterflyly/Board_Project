@@ -1,4 +1,4 @@
-package hello.project.BoardProject.Security;
+package hello.project.BoardProject.Security.Login;
 
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.web.authentication.rememberme.PersistentRememberMeToken;

@@ -1,4 +1,4 @@
-package hello.project.BoardProject.Service;
+package hello.project.BoardProject.Service.Users;
 
 import hello.project.BoardProject.DTO.Users.MessageResponseDTO;
 import hello.project.BoardProject.DTO.Users.UserResponseDTO;
@@ -7,7 +7,6 @@ import hello.project.BoardProject.Entity.Users.Users;
 import hello.project.BoardProject.Error.DataNotFoundException;
 import hello.project.BoardProject.Repository.Users.MessageRepository;
 import hello.project.BoardProject.Repository.Users.UserRepository;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -17,7 +16,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.PrintWriter;
 import java.time.LocalDateTime;
 import java.util.Optional;
 

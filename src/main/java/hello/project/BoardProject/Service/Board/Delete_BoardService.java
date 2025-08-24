@@ -1,12 +1,9 @@
-package hello.project.BoardProject.Service;
+package hello.project.BoardProject.Service.Board;
 
 import hello.project.BoardProject.DTO.Board.Response.BoardResponseDTO;
-import hello.project.BoardProject.DTO.Users.UserResponseDTO;
 import hello.project.BoardProject.Entity.Board.Board;
 import hello.project.BoardProject.Entity.Board.BoardImage;
-import hello.project.BoardProject.Entity.Board.BoardPageNumber;
 import hello.project.BoardProject.Entity.Comment.Comment;
-import hello.project.BoardProject.Entity.Users.Users;
 import hello.project.BoardProject.Error.DataNotFoundException;
 import hello.project.BoardProject.Repository.Board.BoardImageRepository;
 import hello.project.BoardProject.Repository.Board.BoardPageRepository;
@@ -18,9 +15,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.io.File;

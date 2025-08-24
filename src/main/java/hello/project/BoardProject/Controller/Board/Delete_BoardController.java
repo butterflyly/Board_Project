@@ -1,18 +1,14 @@
-package hello.project.BoardProject.Controller;
+package hello.project.BoardProject.Controller.Board;
 
+import hello.project.BoardProject.DTO.Board.Response.BoardImageResponseDTO;
 import hello.project.BoardProject.DTO.Board.Response.BoardResponseDTO;
 import hello.project.BoardProject.DTO.Comment.CommentResponseDTO;
-import hello.project.BoardProject.DTO.Users.UserResponseDTO;
 import hello.project.BoardProject.Entity.Board.BoardCategory;
-import hello.project.BoardProject.Entity.Board.BoardImage;
-import hello.project.BoardProject.Entity.Board.BoardPageNumber;
-import hello.project.BoardProject.Entity.Comment.Comment;
 import hello.project.BoardProject.Form.Board.BoardSearchCondition;
 import hello.project.BoardProject.Form.CommentForm;
-import hello.project.BoardProject.Service.*;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
+import hello.project.BoardProject.Service.Board.Delete_BoardService;
+import hello.project.BoardProject.Service.Board.HiddenBoardImageService;
+import hello.project.BoardProject.Service.Comment.HiddenCommentService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -23,7 +19,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -57,15 +52,11 @@ public class Delete_BoardController {
         Page<CommentResponseDTO> commentPaging = hiddenCommentService.findAll(page,board.getId());
 
         // 소프트 삭제된 게시글의 이미지 데이터 가져오기
-
-        /*
-          엔티티를 컨트롤러에 선언하는게 아니라 DTO로 하면 좋음 추후 수정 예정(수정하면 주석 삭제예정)
-         */
-        List<BoardImage> boardImages = hiddenBoardImageService.ImageList(board.getId());
+        List<BoardImageResponseDTO> boardImages = hiddenBoardImageService.ImageList(board.getId());
 
 
         List<String> ImageUrls = boardImages.stream()
-            .map(BoardImage::getUrl).collect(Collectors.toList());
+            .map(BoardImageResponseDTO::getUrl).collect(Collectors.toList());
 
         model.addAttribute("boardCommentPaging", commentPaging);
         model.addAttribute("totalCount", commentPaging.getTotalElements());
@@ -104,8 +95,7 @@ public class Delete_BoardController {
         };
 
         boardSearchCondition.setType(type);
-        String search  = boardSearchCondition.getType();
-
+        String search = boardSearchCondition.getType();
 
         model.addAttribute("search",search);
         model.addAttribute("boardName",category);
@@ -115,7 +105,6 @@ public class Delete_BoardController {
         model.addAttribute("kw",kw);
         model.addAttribute("sort", sort); // 정렬 정보 유지
         model.addAttribute("CategoryName",CategoryName);
-
 
         return "admin/delete_board/delete_board_list";
     }

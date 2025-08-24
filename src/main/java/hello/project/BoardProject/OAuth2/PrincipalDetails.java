@@ -43,7 +43,7 @@ public class PrincipalDetails implements UserDetails, OAuth2User {
 
     @Override
     public String getName() {
-        return null;
+        return users.getNickname();
     }
 
     // 해당 유저의 권한을 리턴하는 곳
@@ -76,6 +76,8 @@ public class PrincipalDetails implements UserDetails, OAuth2User {
     public String getUsername() {
         return users.getUsername();
     }
+
+
 
 
     // 계정이 만료되지 않았음을 리턴(TRUE는 만료되지 않음)

@@ -1,28 +1,25 @@
-package hello.project.BoardProject.Controller;
+package hello.project.BoardProject.Controller.Users;
 
 import hello.project.BoardProject.DTO.Board.Response.BoardResponseDTO;
 import hello.project.BoardProject.DTO.Comment.CommentResponseDTO;
-import hello.project.BoardProject.DTO.ImageUploadDTO;
-import hello.project.BoardProject.DTO.Users.ImageResponseDTO;
 import hello.project.BoardProject.DTO.Users.UserResponseDTO;
 import hello.project.BoardProject.Entity.Board.BoardCategory;
 import hello.project.BoardProject.Form.Users.UserModifyForm;
-import hello.project.BoardProject.Service.*;
-import jakarta.servlet.http.HttpSession;
+import hello.project.BoardProject.Service.Board.BoardService;
+import hello.project.BoardProject.Service.Comment.CommentService;
+import hello.project.BoardProject.Service.Users.Delete_UserService;
+import hello.project.BoardProject.Service.Users.ImageService;
+import hello.project.BoardProject.Service.Users.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
-import java.awt.*;
-import java.security.Principal;
 import java.util.List;
 
 @RequiredArgsConstructor

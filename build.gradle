@@ -25,6 +25,7 @@ repositories {
 }
 
 dependencies {
+
 	// JPA
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 
@@ -38,10 +39,9 @@ dependencies {
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
 
-
+	// 톰캣 및 테스트
 	providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
 	// mysql
 	runtimeOnly 'com.mysql:mysql-connector-j'
@@ -51,7 +51,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6'
 
-    // 레이아웃 설정
+	// 레이아웃 설정
 	implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect'
 
 	//소셜 로그인 관련
@@ -68,6 +68,9 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-websocket'
 	implementation group: 'it.ozimov', name: 'embedded-redis', version: '0.7.2'
 
+	//JWT
+
+
 	// json
 	implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.14.2'
 
@@ -77,12 +80,6 @@ dependencies {
 
 	// stomp
 	implementation 'org.webjars:stomp-websocket:2.3.4'
-
-
-	// Redis 주입
-	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
-
-	// 소셜탈퇴
 
 }
 

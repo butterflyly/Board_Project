@@ -1,48 +1,33 @@
-package hello.project.BoardProject.Controller;
+package hello.project.BoardProject.Controller.Users;
 
-import hello.project.BoardProject.DTO.Users.UserRequestDTO;
 import hello.project.BoardProject.DTO.Users.UserResponseDTO;
-import hello.project.BoardProject.Entity.Users.UserRole;
-import hello.project.BoardProject.Entity.Users.Users;
-import hello.project.BoardProject.Entity.Users.UsersImage;
+import hello.project.BoardProject.Error.DataNotFoundException;
 import hello.project.BoardProject.Form.Users.UserRegisterForm;
-import hello.project.BoardProject.OAuth2.Google.GoogleUserDetails;
-import hello.project.BoardProject.OAuth2.Naver.NaverUserDetails;
-import hello.project.BoardProject.OAuth2.OAuth2UserInfo;
-import hello.project.BoardProject.OAuth2.PrincipalOAuth2UserService;
-import hello.project.BoardProject.Repository.Users.ImageRepository;
-import hello.project.BoardProject.Repository.Users.UserRepository;
-import hello.project.BoardProject.Service.Delete_UserService;
-import hello.project.BoardProject.Service.UserService;
+import hello.project.BoardProject.Service.Users.Delete_UserService;
+import hello.project.BoardProject.Service.Users.OAuth2Service;
+import hello.project.BoardProject.Service.Users.UserService;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-
-import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.net.http.HttpResponse;
-import java.time.LocalDateTime;
-import java.util.Optional;
+import java.security.Principal;
+import java.util.zip.DataFormatException;
 
 @Controller
 @RequiredArgsConstructor
 @Slf4j
-public class OAuth2RegisterController {
+public class OAuth2Controller {
 
     private final UserService userService;
     private final Delete_UserService deleteUserService;
+    private final OAuth2Service oAuth2Service;
 
 
     // OAuth2 로그인 시 최초 로그인인 경우 회원가입 진행, 필요한 정보를 쿼리 파라미터로 받는다
@@ -74,10 +59,12 @@ public class OAuth2RegisterController {
     }
 
 
-    @PostMapping("/oauth2/signUp")
-    public String loadOAuthSignUp(UserRegisterForm userRegisterForm,HttpSession httpSession) throws ServletException {
 
-        userService.OAuth2Register(userRegisterForm);
+    @PostMapping("/oauth2/signUp")
+    public String loadOAuthSignUp(UserRegisterForm userRegisterForm,HttpSession httpSession)
+            throws ServletException, DataFormatException {
+
+        oAuth2Service.OAuth2Register(userRegisterForm);
         UserResponseDTO userResponseDTO = userService.getUserEmailDTO(userRegisterForm.getEmail());
 
         // 회원가입 완료 후 세션값 삭제
@@ -122,4 +109,40 @@ public class OAuth2RegisterController {
             return ResponseEntity.status(HttpStatus.OK).build();
         }
     }
+
+    // 소셜로그인 회원탈퇴
+    @PostMapping("/users/delete/OAuth2/{provider}")
+    public String Delete_OAuth2(@PathVariable String provider, Principal principal,HttpSession httpSession) throws Exception {
+
+        String accesToken = oAuth2Service.accessToken(principal.getName());
+
+
+        // 구글 탈퇴
+        if(provider.equals("google"))
+        {
+            if(accesToken != null)
+            {
+                oAuth2Service.revokeGoogleToken(accesToken);
+            }
+            else {
+                throw new DataNotFoundException("액세스 토큰이 없어요. 재로그인으로 액세스 토큰을 재발급 받아주세요");
+            }
+        }
+        // 네이버 탈퇴
+        else {
+            if(accesToken == null)
+            {
+                accesToken = oAuth2Service.reissueAccessToken(principal.getName());
+            }
+            oAuth2Service.NaverDelete(accesToken);
+        }
+
+        userService.UserDelete(principal.getName());
+
+        httpSession.invalidate();
+
+        return "redirect:/";
+    }
+
 }
+

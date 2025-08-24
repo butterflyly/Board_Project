@@ -2,7 +2,6 @@ package hello.project.BoardProject.Controller;
 
 
 import hello.project.BoardProject.DTO.Board.Response.BoardResponseDTO;
-import hello.project.BoardProject.DTO.Board.Response.Board_Views_ResponseDTO;
 import hello.project.BoardProject.DTO.Comment.CommentResponseDTO;
 import hello.project.BoardProject.DTO.ChartData;
 import hello.project.BoardProject.DTO.ImageUploadDTO;
@@ -10,25 +9,22 @@ import hello.project.BoardProject.DTO.Users.ImageResponseDTO;
 import hello.project.BoardProject.DTO.Users.UserResponseDTO;
 import hello.project.BoardProject.Entity.Board.BoardCategory;
 import hello.project.BoardProject.Form.Users.UserModifyForm;
-import hello.project.BoardProject.Service.*;
-import jakarta.servlet.http.HttpSession;
+import hello.project.BoardProject.Service.Board.BoardService;
+import hello.project.BoardProject.Service.Comment.CommentService;
+import hello.project.BoardProject.Service.Users.Delete_UserService;
+import hello.project.BoardProject.Service.Users.ImageService;
+import hello.project.BoardProject.Service.Users.LoginLogService;
+import hello.project.BoardProject.Service.Users.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.checkerframework.checker.units.qual.C;
 import org.springframework.data.domain.Page;
-import org.springframework.http.HttpStatus;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
-import java.security.Principal;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @RequiredArgsConstructor
@@ -122,7 +118,6 @@ public class AdminController {
     }
 
 
-
     // 유저 데이터 수정
     @PostMapping("/user/info/{userId}")
     public String usermodify(@PathVariable Long userId,
@@ -196,7 +191,6 @@ public class AdminController {
             Categorys = "버그 게시글";
         }
 
-
         model.addAttribute("boardName",category);
         model.addAttribute("userId",userResponseDTO.getUsername());
 
@@ -204,6 +198,7 @@ public class AdminController {
         Page<BoardResponseDTO> paging = boardService.getPersonalBoardList(page, userResponseDTO.getUsername(),category);
         model.addAttribute("user", userResponseDTO);
         model.addAttribute("paging", paging);
+
         // 동일한 템플릿 사용 -> 총 답변수로 표기하기 위함
         model.addAttribute("type", "총 "+Categorys+" 개수");
         return "admin/admin_personal_list";
@@ -216,7 +211,6 @@ public class AdminController {
                                 @RequestParam(defaultValue = "0") int page)
     {
         UserResponseDTO userResponseDTO = userService.getUserDTO(userId);
-
 
         Page<CommentResponseDTO> paging = commentService.getPersonalCommentList(page, userResponseDTO.getUsername());
         model.addAttribute("user", userResponseDTO);
@@ -341,7 +335,6 @@ public class AdminController {
             }
             if(i==2)
             {
-
                 model.addAttribute("commentChartData_bug" , commentChartData);
             }
         }

@@ -2,22 +2,17 @@ package hello.project.BoardProject.Component;
 
 import hello.project.BoardProject.DTO.Board.Response.BoardResponseDTO;
 import hello.project.BoardProject.DTO.Users.UserResponseDTO;
-import hello.project.BoardProject.Entity.Board.Board;
 import hello.project.BoardProject.Entity.Users.OAuth2AccesTokenData;
-import hello.project.BoardProject.Repository.Board.DeleteBoardRepository;
 import hello.project.BoardProject.Repository.Users.OAuth2AccesTokenDataRepository;
-import hello.project.BoardProject.Service.Delete_BoardService;
-import hello.project.BoardProject.Service.Delete_UserService;
+import hello.project.BoardProject.Service.Board.Delete_BoardService;
+import hello.project.BoardProject.Service.Users.Delete_UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 
@@ -34,7 +29,7 @@ public class DeleteCleanUpScheduler {
     private final OAuth2AccesTokenDataRepository oAuth2AccesTokenDataRepository;
 
     // 엑세스 토큰 삭제 메소드
-    @Scheduled(fixedRate = 600000)
+    @Scheduled(fixedRate = 500000)
     @Transactional
     public void accesTokenDelete()
     {
@@ -42,15 +37,30 @@ public class DeleteCleanUpScheduler {
 
         for(OAuth2AccesTokenData oAuth2AccesTokenData : oAuth2AccesTokenDataList)
         {
-            // 현재 시간이 데이터 생성 10분보다 미래여야함
+            // 현재 시간이 데이터 생성 1시간보다 미래여야함
             // ex) 데이터 생성이 2025-06-25(1010) 인경우
             // 현재시간이 2022-06-25(1021) 인 경우
             // 이러면 데이터 삭제 조건이 충족
-            if(LocalDateTime.now().isAfter(oAuth2AccesTokenData.getCreateDate().plusMinutes(10)) ||
-                    LocalDateTime.now().isEqual(oAuth2AccesTokenData.getCreateDate().plusMinutes(10)))
+            if(oAuth2AccesTokenData.getToken() != null)
             {
-                // 토큰값 삭제
-                oAuth2AccesTokenDataRepository.delete(oAuth2AccesTokenData);
+                if(LocalDateTime.now().isAfter(oAuth2AccesTokenData.getAccessCreateDate().plusMinutes(40)) ||
+                        LocalDateTime.now().isEqual(oAuth2AccesTokenData.getAccessCreateDate().plusMinutes(40)))
+                {
+                    // 액세스 토큰값 null 로 변환
+                    oAuth2AccesTokenData.setToken(null);
+                    oAuth2AccesTokenDataRepository.save(oAuth2AccesTokenData);
+                }
+            }
+
+            if(oAuth2AccesTokenData.getRefreshToken() != null)
+            {
+                // 리프레시 토큰 삭제 (약 한달)
+                if(LocalDateTime.now().isAfter(oAuth2AccesTokenData.getRefreshCreateDate().plusMonths(1)) ||
+                        LocalDateTime.now().isEqual(oAuth2AccesTokenData.getRefreshCreateDate().plusMonths(1)))
+                {
+                    oAuth2AccesTokenData.setRefreshToken(null);
+                    oAuth2AccesTokenDataRepository.save(oAuth2AccesTokenData);
+                }
             }
         }
     }

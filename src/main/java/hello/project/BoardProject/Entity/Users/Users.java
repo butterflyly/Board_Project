@@ -83,6 +83,17 @@ public class Users {
     @Column(name = "user_deleted")
     private Boolean deleted = Boolean.FALSE;
 
+    @Setter
+    private String refresh; //refresh token 저장
+
+    private String expiration; //refresh token 만료일
+
+    public static Users createUser(String username, UserRole userRole) {
+        Users user = new Users();
+        user.username = username;
+        return user;
+    }
+
 
     public void NicknameUpdate(String nickname)
     {
@@ -128,7 +139,8 @@ public class Users {
                 ,LocalDateTime user_delete_createDate,List<Message> sentMessages,
                  List<Message> receivedMessages
     ,List<BoardRead> boardReads,List<BoardVoter> boardVoterList,List<BoardNotVoter> boardNotVoterList,
-                 List<CommentRecommend> commentRecommends,List<CommentNotRecommend> commentNotRecommends)
+                 List<CommentRecommend> commentRecommends,List<CommentNotRecommend> commentNotRecommends
+                    ,String refresh,String expiration)
     {
         this.id = id;
         this.username = username;
@@ -148,6 +160,8 @@ public class Users {
         this.boardNotVoterList = boardNotVoterList;
         this.commentRecommends = commentRecommends;
         this.commentNotRecommends = commentNotRecommends;
+        this.refresh = refresh;
+        this.expiration = expiration;
     }
 
     public void Deleted_False() {

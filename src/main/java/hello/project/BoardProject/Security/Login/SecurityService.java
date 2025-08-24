@@ -1,4 +1,4 @@
-package hello.project.BoardProject.Security;
+package hello.project.BoardProject.Security.Login;
 
 import hello.project.BoardProject.Entity.Users.UserRole;
 import hello.project.BoardProject.Entity.Users.Users;

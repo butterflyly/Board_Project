@@ -1,9 +1,9 @@
-package hello.project.BoardProject.Service;
+package hello.project.BoardProject.Service.Comment;
 
 
 import hello.project.BoardProject.DTO.Board.Response.BoardResponseDTO;
-import hello.project.BoardProject.DTO.Comment.CommentResponseDTO;
 import hello.project.BoardProject.DTO.ChartData;
+import hello.project.BoardProject.DTO.Comment.CommentResponseDTO;
 import hello.project.BoardProject.DTO.Users.UserResponseDTO;
 import hello.project.BoardProject.Entity.Board.Board;
 import hello.project.BoardProject.Entity.Comment.Comment;
@@ -21,11 +21,8 @@ import hello.project.BoardProject.Repository.Users.DeleteUserRepository;
 import hello.project.BoardProject.Repository.Users.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.checkerframework.checker.units.qual.C;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.domain.*;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

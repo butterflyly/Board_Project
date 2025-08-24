@@ -1,10 +1,10 @@
-package hello.project.BoardProject.Controller;
+package hello.project.BoardProject.Controller.Users;
 
 import hello.project.BoardProject.DTO.Users.MessageResponseDTO;
 import hello.project.BoardProject.DTO.Users.UserResponseDTO;
 import hello.project.BoardProject.Form.Users.MessageForm;
-import hello.project.BoardProject.Service.MessageService;
-import hello.project.BoardProject.Service.UserService;
+import hello.project.BoardProject.Service.Users.MessageService;
+import hello.project.BoardProject.Service.Users.UserService;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

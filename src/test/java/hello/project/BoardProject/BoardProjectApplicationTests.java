@@ -1,8 +1,6 @@
 package hello.project.BoardProject;
 
-import hello.project.BoardProject.DTO.Board.BoardImageUploadDTO;
 import hello.project.BoardProject.DTO.Board.Request.BoardRequestDTO;
-import hello.project.BoardProject.DTO.Board.Response.BoardResponseDTO;
 import hello.project.BoardProject.DTO.Users.UserResponseDTO;
 import hello.project.BoardProject.Entity.Board.Board;
 import hello.project.BoardProject.Entity.Board.BoardNotVoter;
@@ -19,16 +17,14 @@ import hello.project.BoardProject.Repository.Comment.CommentRepository;
 import hello.project.BoardProject.Repository.Users.DeleteUserRepository;
 import hello.project.BoardProject.Repository.Users.MessageRepository;
 import hello.project.BoardProject.Repository.Users.UserRepository;
-import hello.project.BoardProject.Service.BoardService;
-import hello.project.BoardProject.Service.CommentService;
-import hello.project.BoardProject.Service.MessageService;
-import hello.project.BoardProject.Service.UserService;
-import jakarta.servlet.http.HttpServletResponse;
+import hello.project.BoardProject.Service.Board.BoardService;
+import hello.project.BoardProject.Service.Comment.CommentService;
+import hello.project.BoardProject.Service.Users.MessageService;
+import hello.project.BoardProject.Service.Users.UserService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.util.List;

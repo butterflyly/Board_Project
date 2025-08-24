@@ -1,11 +1,13 @@
-package hello.project.BoardProject.Service;
+package hello.project.BoardProject.Service.Board;
 
+import hello.project.BoardProject.DTO.Board.Response.BoardImageResponseDTO;
 import hello.project.BoardProject.Entity.Board.BoardImage;
 import hello.project.BoardProject.Repository.Board.BoardImageRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -15,10 +17,14 @@ import java.util.List;
 public class HiddenBoardImageService {
 
     private final BoardImageRepository boardImageRepository;
-    public List<BoardImage> ImageList(Long delete_board_Id) {
+    public List<BoardImageResponseDTO> ImageList(Long delete_board_Id) {
 
         List<BoardImage> boardImageList = boardImageRepository.findByDelete_Board_Id(delete_board_Id);
 
-        return boardImageList;
+        List<BoardImageResponseDTO> boardImageResponseDTOList =
+                boardImageList.stream().map(b -> new BoardImageResponseDTO(b)).
+                        collect(Collectors.toList());
+
+        return boardImageResponseDTOList;
     }
 }

@@ -1,23 +1,16 @@
-package hello.project.BoardProject.Security;
+package hello.project.BoardProject.Security.Logout;
 
 
 import hello.project.BoardProject.Entity.Users.OAuth2AccesTokenData;
 import hello.project.BoardProject.Entity.Users.Users;
 import hello.project.BoardProject.Repository.Users.OAuth2AccesTokenDataRepository;
 import hello.project.BoardProject.Repository.Users.UserRepository;
-import hello.project.BoardProject.Service.UserService;
-import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.web.DefaultRedirectStrategy;
-import org.springframework.security.web.RedirectStrategy;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
-import org.springframework.security.web.authentication.logout.SimpleUrlLogoutSuccessHandler;
-import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
-import org.springframework.security.web.savedrequest.RequestCache;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;

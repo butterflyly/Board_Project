@@ -7,17 +7,30 @@ import hello.project.BoardProject.Entity.Users.Users;
 import hello.project.BoardProject.Entity.Users.UsersImage;
 import hello.project.BoardProject.OAuth2.Google.GoogleUserDetails;
 import hello.project.BoardProject.OAuth2.Naver.NaverUserDetails;
+import hello.project.BoardProject.Repository.Users.DeleteUserRepository;
 import hello.project.BoardProject.Repository.Users.ImageRepository;
 import hello.project.BoardProject.Repository.Users.OAuth2AccesTokenDataRepository;
 import hello.project.BoardProject.Repository.Users.UserRepository;
+import hello.project.BoardProject.Service.Users.Delete_UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
+import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
+import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
+import org.springframework.security.oauth2.core.OAuth2AccessToken;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
+import org.springframework.security.oauth2.core.OAuth2RefreshToken;
+import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
+import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
+
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
@@ -29,11 +42,13 @@ import java.util.Optional;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class PrincipalOAuth2UserService extends DefaultOAuth2UserService {
+public class PrincipalOAuth2UserService  extends DefaultOAuth2UserService {
 
     private final UserRepository userRepository;
     private final ImageRepository imageRepository;
     private final OAuth2AccesTokenDataRepository oAuth2AccesTokenDataRepository;
+    private final DeleteUserRepository deleteUserRepository;
+    private final Delete_UserService deleteUserService;
 
 
     @Override
@@ -44,8 +59,9 @@ public class PrincipalOAuth2UserService extends DefaultOAuth2UserService {
         log.info("getAttributes : {}",oAuth2User.getAttributes());
 
         // 네이버(혹은 구글) 서버에서 발급해주는 AccessToken 추출
-        String oauth2AccessToken = userRequest.getAccessToken().getTokenValue();  // 소셜엑세스토큰 값 가져오기
-
+        String access = userRequest.getAccessToken().getTokenValue();
+        OAuth2AccessToken.TokenType tokenType = userRequest.getAccessToken().getTokenType();
+        log.info("액세스 : "+ tokenType);
 
         String provider = userRequest.getClientRegistration().getRegistrationId(); // 소셜사이트 정보 가져오기
         OAuth2UserInfo oAuth2UserInfo = null;
@@ -68,10 +84,12 @@ public class PrincipalOAuth2UserService extends DefaultOAuth2UserService {
         UserRole role = UserRole.GUEST;
 
         Users findMember = userRepository.findByusername(loginId).orElse(null);
+        Users deleteFindMember = deleteUserRepository.findByusername(loginId).orElse(null);
         Users member;
 
+        // 그냥 아얘 없는 회원 0 0
         // USER_ROLE 을 GUEST 로 설정하고 회원가입
-        if (findMember == null) {
+        if (findMember == null && deleteFindMember == null) {
             member = Users.builder()
                     .username(loginId)
                     .email(email)
@@ -89,28 +107,67 @@ public class PrincipalOAuth2UserService extends DefaultOAuth2UserService {
                     .build();
 
             imageRepository.save(image);
+        }
+        // 소프트 삭제된 유저가 있는 경우 0 1
+        else if(deleteFindMember != null)
+        {
+            deleteFindMember.Deleted_False();
+            deleteUserRepository.save(deleteFindMember);
 
-        } else{
+            deleteUserService.User_ReStore(deleteFindMember.getId());
+
+            member = Users.builder()
+                    .username(deleteFindMember.getUsername())
+                    .email(deleteFindMember.getEmail())
+                    .nickname(deleteFindMember.getNickname())
+                    .providers(deleteFindMember.getProviders())
+                    .providerIds(deleteFindMember.getProviderIds())
+                    .userRole(role)
+                    .build();
+            userRepository.save(member);
+        }
+        // 1 0
+        // 1 1 인 경우는 이론상 나올수 없으므로 1 0인 경우
+        else{
             member = findMember;
         }
 
-        // 임시로 엑세스 토큰을 데이터베이스화해서 저장
-        Optional<OAuth2AccesTokenData> oAuth2AccesTokenData = oAuth2AccesTokenDataRepository.findByUsername(member.getUsername());
+        Optional<OAuth2AccesTokenData> OptionOAuth2AccesTokenData = oAuth2AccesTokenDataRepository.findByUsername(member.getUsername());
 
-        // 토큰값이 비어있는 경우
-        if(oAuth2AccesTokenData.isEmpty())
+        OAuth2AccesTokenData oAuth2AccesTokenData;
+
+        // 엔티티가 존재할 경우
+        if(!OptionOAuth2AccesTokenData.isEmpty())
         {
-            OAuth2AccesTokenData tokenData = new OAuth2AccesTokenData();
-            tokenData.setUsername(member.getUsername());
-            tokenData.setProvier(provider);
-            tokenData.setToken(oauth2AccessToken);
-            tokenData.setCreateDate(LocalDateTime.now());
-
-            oAuth2AccesTokenDataRepository.save(tokenData);
+            oAuth2AccesTokenData = OptionOAuth2AccesTokenData.get();
+            // 엑세스 토큰이 없다면 액세스 토큰 생성
+            if(oAuth2AccesTokenData.getToken() == null)
+            {
+                oAuth2AccesTokenData.setToken(access);
+                oAuth2AccesTokenData.setAccessCreateDate(LocalDateTime.now());
+            }
         }
 
+        // 엔티티가 존재하지 않을 경우 엔티티 생성
+        else {
+            oAuth2AccesTokenData = new OAuth2AccesTokenData();
+            oAuth2AccesTokenData.setToken(access);
+            oAuth2AccesTokenData.setUsername(member.getUsername());
+            oAuth2AccesTokenData.setAccessCreateDate(LocalDateTime.now());
+            oAuth2AccesTokenData.setProvier(providerId);
+            oAuth2AccesTokenDataRepository.save(oAuth2AccesTokenData);
+        }
+
+        // 사용자 정보를 세션에 저장
+        SecurityContextHolder.getContext().
+                setAuthentication(new
+                        UsernamePasswordAuthenticationToken(member.getUserRole(),
+                        member, null));
+
         return new PrincipalDetails(member, oAuth2User.getAttributes());
+
     }
 
 
 }
+

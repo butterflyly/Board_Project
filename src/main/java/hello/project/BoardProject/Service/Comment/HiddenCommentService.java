@@ -1,9 +1,6 @@
-package hello.project.BoardProject.Service;
+package hello.project.BoardProject.Service.Comment;
 
-import hello.project.BoardProject.DTO.Board.Response.BoardResponseDTO;
 import hello.project.BoardProject.DTO.Comment.CommentResponseDTO;
-import hello.project.BoardProject.DTO.Users.UserResponseDTO;
-import hello.project.BoardProject.Entity.Board.Board;
 import hello.project.BoardProject.Entity.Comment.Comment;
 import hello.project.BoardProject.Repository.Comment.HiddenCommentRepository;
 import lombok.RequiredArgsConstructor;
@@ -12,8 +9,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @RequiredArgsConstructor
 @Service

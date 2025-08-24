@@ -3,14 +3,12 @@ package hello.project.BoardProject;
 import hello.project.BoardProject.Form.UploadForm;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.autoconfigure.data.redis.RedisProperties;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -20,7 +18,6 @@ import java.util.List;
 @Slf4j
 public class Hello {
 
-    private final RedisProperties redisProperties;
 
     @GetMapping("/")
     public String hello()
@@ -53,9 +50,6 @@ public class Hello {
                 }
             }
         }
-
-
         return "redirect:/"; // 성공 뷰
     }
-
 }
